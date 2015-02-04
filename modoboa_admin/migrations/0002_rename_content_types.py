@@ -16,11 +16,6 @@ def rename_content_types(apps, schema_editor):
         ct.delete()
         old_ct.save()
 
-def rename_permissions(apps, schema_editor):
-    """Rename old permissions if necessary."""
-    Permission = apps.get_model("auth", "Permission")
-
-
 
 class Migration(migrations.Migration):
 
