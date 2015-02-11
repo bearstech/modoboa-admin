@@ -46,7 +46,7 @@ def domains_menu(selection, user):
          "class": "navigation",
          "url": reverse("modoboa_admin:domain_statistics")}
     ]
-    if user.has_perm("admin.add_domain"):
+    if user.has_perm("modoboa_admin.add_domain"):
         entries += [
             {"name": "newdomain",
              "label": _("Add domain"),
