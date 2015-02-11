@@ -247,7 +247,8 @@ class DomainFormOptions(forms.Form):
             address=self.cleaned_data["dom_admin_username"], domain=domain,
             user=da, use_domain_quota=True
         )
-        mb.set_quota(override_rules=user.has_perm("admin.change_domain"))
+        mb.set_quota(
+            override_rules=user.has_perm("modoboa_admin.change_domain"))
         mb.save(creator=user)
 
         if self.cleaned_data["create_aliases"] == "yes":
@@ -268,7 +269,7 @@ class DomainForm(TabForms):
     def __init__(self, request, *args, **kwargs):
         self.user = request.user
         self.forms = []
-        if self.user.has_perm("admin.change_domain"):
+        if self.user.has_perm("modoboa_admin.change_domain"):
             self.forms.append({
                 "id": "general",
                 "title": _("General"),

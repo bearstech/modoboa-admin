@@ -92,7 +92,7 @@ class Domain(AdminObject):
         from modoboa.lib.permissions import grant_access_to_object
         grant_access_to_object(account, self)
         for mb in self.mailbox_set.all():
-            if mb.user.has_perm("admin.add_domain"):
+            if mb.user.has_perm("modoboa_admin.add_domain"):
                 continue
             grant_access_to_object(account, mb)
             grant_access_to_object(account, mb.user)
@@ -111,7 +111,7 @@ class Domain(AdminObject):
             events.raiseEvent('DomainOwnershipRemoved', account, self)
         ungrant_access_to_object(self, account)
         for mb in self.mailbox_set.all():
-            if mb.user.has_perm("admin.add_domain"):
+            if mb.user.has_perm("modoboa_admin.add_domain"):
                 continue
             ungrant_access_to_object(mb, account)
             ungrant_access_to_object(mb.user, account)

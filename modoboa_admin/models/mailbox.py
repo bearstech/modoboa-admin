@@ -256,7 +256,7 @@ class Mailbox(AdminObject):
     def post_create(self, creator):
         from modoboa.lib.permissions import grant_access_to_object
         super(Mailbox, self).post_create(creator)
-        if creator.is_superuser and not self.user.has_perm("admin.add_domain"):
+        if creator.is_superuser and not self.user.has_perm("modoboa_admin.add_domain"):
             # A super user is creating a new mailbox. Give
             # access to that mailbox (and the associated
             # account) to the appropriate domain admins,

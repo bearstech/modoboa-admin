@@ -31,7 +31,8 @@ def domains_menu(selection, user):
     :return: rendered menu (as HTML)
     """
     domain_list_url = (
-        "list/" if selection != "statistics" else reverse("modoboa_admin:domain_list")
+        "list/" if selection != "statistics"
+        else reverse("modoboa_admin:domain_list")
     )
     entries = [
         {"name": "domains",
@@ -152,7 +153,7 @@ def domain_actions(user, domain):
              "title": _("View the domain's identities"),
              "img": "fa fa-user"}
         ]
-        if user.has_perm("admin.delete_domain"):
+        if user.has_perm("modoboa_admin.delete_domain"):
             actions.append({
                 "name": "deldomain",
                 "url": reverse("modoboa_admin:domain_delete", args=[domain.id]),

@@ -48,19 +48,19 @@ ADMIN_EVENTS = [
 
 PERMISSIONS = {
     "DomainAdmins": [
-        ["admin", "domain", "view_domain"],
-        ["admin", "mailbox", "add_mailbox"],
-        ["admin", "mailbox", "change_mailbox"],
-        ["admin", "mailbox", "delete_mailbox"],
-        ["admin", "alias", "add_alias"],
-        ["admin", "alias", "change_alias"],
-        ["admin", "alias", "delete_alias"],
-        ["admin", "mailbox", "view_mailboxes"],
-        ["admin", "alias", "view_aliases"],
-        ["admin", "domainalias", "view_domaliases"],
-        ["admin", "domainalias", "add_domainalias"],
-        ["admin", "domainalias", "change_domainalias"],
-        ["admin", "domainalias", "delete_domainalias"]
+        ["modoboa_admin", "domain", "view_domain"],
+        ["modoboa_admin", "mailbox", "add_mailbox"],
+        ["modoboa_admin", "mailbox", "change_mailbox"],
+        ["modoboa_admin", "mailbox", "delete_mailbox"],
+        ["modoboa_admin", "alias", "add_alias"],
+        ["modoboa_admin", "alias", "change_alias"],
+        ["modoboa_admin", "alias", "delete_alias"],
+        ["modoboa_admin", "mailbox", "view_mailboxes"],
+        ["modoboa_admin", "alias", "view_aliases"],
+        ["modoboa_admin", "domainalias", "view_domaliases"],
+        ["modoboa_admin", "domainalias", "add_domainalias"],
+        ["modoboa_admin", "domainalias", "change_domainalias"],
+        ["modoboa_admin", "domainalias", "delete_domainalias"]
     ]
 }
 

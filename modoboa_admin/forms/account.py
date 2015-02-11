@@ -234,7 +234,7 @@ class AccountFormMail(forms.Form, DynamicForm):
         self.mb = Mailbox(address=locpart, domain=domain, user=account,
                           use_domain_quota=self.cleaned_data["quota_act"])
         self.mb.set_quota(self.cleaned_data["quota"],
-                          user.has_perm("admin.add_domain"))
+                          user.has_perm("modoboa_admin.add_domain"))
         self.mb.save(creator=user)
 
     def update_mailbox(self, user, account):
@@ -257,7 +257,7 @@ class AccountFormMail(forms.Form, DynamicForm):
 
         self.mb.use_domain_quota = self.cleaned_data["quota_act"]
         override_rules = True \
-            if not self.mb.quota or user.has_perm("admin.add_domain") \
+            if not self.mb.quota or user.has_perm("modoboa_admin.add_domain") \
             else False
         self.mb.set_quota(self.cleaned_data["quota"], override_rules)
         self.mb.save()
@@ -374,7 +374,8 @@ class AccountForm(TabForms):
                  formtpl="modoboa_admin/account_general_form.html",
                  cls=AccountFormGeneral,
                  new_args=[self.user], mandatory=True),
-            dict(id="mail", title=_("Mail"), formtpl="modoboa_admin/mailform.html",
+            dict(id="mail",
+                 title=_("Mail"), formtpl="modoboa_admin/mailform.html",
                  cls=AccountFormMail),
             dict(
                 id="perms", title=_("Permissions"),
@@ -394,13 +395,14 @@ class AccountForm(TabForms):
         context.update({
             'title': account.username,
             'formid': 'accountform',
-            'action': reverse("modoboa_admin:account_change", args=[account.id]),
+            'action': reverse("modoboa_admin:account_change",
+                              args=[account.id]),
         })
 
     def check_perms(self, account):
         if account.is_superuser:
             return False
-        return self.user.has_perm("admin.add_domain") \
+        return self.user.has_perm("modoboa_admin.add_domain") \
             and account.has_perm("core.add_user")
 
     def _before_is_valid(self, form):
