@@ -7,8 +7,9 @@ env:
 
 install:
   - pip install -q Django==$DJANGO --use-mirrors
+  - pip install -e git+https://github.com/tonioo/modoboa.git@split_applications#egg=modoboa
   - python setup.py -q install
-  - pip install -q MySQL-python --use-mirrors
+  - pip install -q psycopg2 --use-mirrors
 
 before_script:
   - mysql -e 'create database modoboa_test;'

@@ -1,1 +1,1 @@
--e git+https://github.com/tonioo/modoboa.git@split_applications#egg=modoboa
+modoboa
