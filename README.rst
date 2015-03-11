@@ -1,10 +1,10 @@
 modoboa-admin
-===
+=============
 
 The administration panel of Modoboa.
 
 Installation
----
+------------
 
 Install this extension system-wide or inside a virtual environment by
 running the following command::
