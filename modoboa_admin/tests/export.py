@@ -6,7 +6,6 @@ from .. import factories
 
 
 class ExportTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
 
     def setUp(self):
         super(ExportTestCase, self).setUp()
