@@ -1,9 +1,11 @@
 """Test map files generation."""
 
-from modoboa.lib.test_utils import MapFilesTestCase as BaseTestCase
+from django.test import TestCase
+
+from modoboa.lib.test_utils import MapFilesTestCaseMixin
 
 
-class MapFilesTestCase(BaseTestCase):
+class MapFilesTestCase(MapFilesTestCaseMixin, TestCase):
 
     """Test case for modoboa_admin."""
 
