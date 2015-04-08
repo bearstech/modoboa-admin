@@ -1,3 +1,5 @@
+"""Domain related test cases."""
+
 from django.core.urlresolvers import reverse
 
 from modoboa.core.models import User
@@ -9,15 +11,15 @@ from ..models import Domain, Alias
 
 
 class DomainTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
+
+    """Test case for Domain."""
 
     def setUp(self):
         super(DomainTestCase, self).setUp()
         factories.populate_database()
 
     def test_create(self):
-        """Test the creation of a domain
-        """
+        """Test the creation of a domain."""
         values = {
             "name": "pouet.com", "quota": 100, "create_dom_admin": "no",
             "stepid": 'step2'
@@ -68,7 +70,7 @@ class DomainTestCase(ModoTestCase):
         self.assertTrue(da.can_access(al))
 
     def test_create_using_default_quota(self):
-        parameters.save_admin('DEFAULT_DOMAIN_QUOTA', 50, app='admin')
+        parameters.save_admin('DEFAULT_DOMAIN_QUOTA', 50, app='modoboa_admin')
         values = {
             "name": "pouet.com", "create_dom_admin": "yes",
             "dom_admin_username": "toto", "create_aliases": "yes",

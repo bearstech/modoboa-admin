@@ -1,3 +1,5 @@
+"""Export related test cases."""
+
 from django.core.urlresolvers import reverse
 
 from modoboa.lib.tests import ModoTestCase
@@ -6,6 +8,8 @@ from .. import factories
 
 
 class ExportTestCase(ModoTestCase):
+
+    """Test case for export operations."""
 
     def setUp(self):
         super(ExportTestCase, self).setUp()
@@ -31,7 +35,7 @@ class ExportTestCase(ModoTestCase):
     def test_export_identities(self):
         response = self.__export_identities()
         self.assertListEqual(
-            "account;admin;{CRYPT}dTTsGDkA5ZHKg;;;True;SuperAdmins;;\r\naccount;admin@test.com;{PLAIN}toto;;;True;DomainAdmins;admin@test.com;10;test.com\r\naccount;admin@test2.com;{PLAIN}toto;;;True;DomainAdmins;admin@test2.com;10;test2.com\r\naccount;user@test.com;{PLAIN}toto;;;True;SimpleUsers;user@test.com;10\r\naccount;user@test2.com;{PLAIN}toto;;;True;SimpleUsers;user@test2.com;10\r\nalias;alias@test.com;True;user@test.com\r\nforward;forward@test.com;True;user@external.com\r\ndlist;postmaster@test.com;True;toto@titi.com;test@truc.fr\r\n",
+            "account;admin@test.com;{PLAIN}toto;;;True;DomainAdmins;admin@test.com;10;test.com\r\naccount;admin@test2.com;{PLAIN}toto;;;True;DomainAdmins;admin@test2.com;10;test2.com\r\naccount;user@test.com;{PLAIN}toto;;;True;SimpleUsers;user@test.com;10\r\naccount;user@test2.com;{PLAIN}toto;;;True;SimpleUsers;user@test2.com;10\r\nalias;alias@test.com;True;user@test.com\r\nforward;forward@test.com;True;user@external.com\r\ndlist;postmaster@test.com;True;toto@titi.com;test@truc.fr\r\n",
             response.content.strip()
         )
 
@@ -45,12 +49,18 @@ class ExportTestCase(ModoTestCase):
         )
 
     def test_export_superadmins(self):
+        """A test to validate we only export 1 super admin.
+
+        The password is removed since it is hashed using SHA512-CRYPT.
+        """
         response = self.__export_identities(
             idtfilter="account", grpfilter="SuperAdmins"
         )
+        elements = response.content.strip().split(";")
+        self.assertEqual(len(elements), 9)
+        elements[2] = ""
         self.assertEqual(
-            response.content.strip(),
-            "account;admin;{CRYPT}dTTsGDkA5ZHKg;;;True;SuperAdmins;;"
+            ";".join(elements), "account;admin;;;;True;SuperAdmins;;"
         )
 
     def test_export_domainadmins(self):

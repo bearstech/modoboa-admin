@@ -48,6 +48,7 @@ ADMIN_EVENTS = [
 
 PERMISSIONS = {
     "DomainAdmins": [
+        ["modoboa_admin", "domain", "view_domains"],
         ["modoboa_admin", "domain", "view_domain"],
         ["modoboa_admin", "mailbox", "add_mailbox"],
         ["modoboa_admin", "mailbox", "change_mailbox"],

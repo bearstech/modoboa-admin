@@ -8,7 +8,6 @@ from ..models import Domain, Mailbox
 
 
 class AccountTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
 
     def setUp(self):
         super(AccountTestCase, self).setUp()
@@ -74,7 +73,6 @@ class AccountTestCase(ModoTestCase):
 
 
 class PermissionsTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
 
     def setUp(self):
         super(PermissionsTestCase, self).setUp()

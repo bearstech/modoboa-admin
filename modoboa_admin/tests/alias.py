@@ -53,7 +53,7 @@ class AliasTestCase(ModoTestCase):
         )
 
         values = {
-            "email": "Titi@test.com", "recipient": "user@test.com",
+            "email": "Titi@test.com", "recipients": "user@test.com",
             "enabled": True
         }
         self.ajax_post(reverse("modoboa_admin:alias_add"), values)
