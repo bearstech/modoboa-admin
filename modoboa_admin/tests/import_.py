@@ -10,7 +10,6 @@ from ..models import Domain, Alias, DomainAlias
 
 
 class ImportTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
 
     def setUp(self):
         super(ImportTestCase, self).setUp()

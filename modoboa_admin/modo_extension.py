@@ -48,6 +48,9 @@ ADMIN_EVENTS = [
 
 PERMISSIONS = {
     "DomainAdmins": [
+        ["core", "user", "add_user"],
+        ["core", "user", "change_user"],
+        ["core", "user", "delete_user"],
         ["modoboa_admin", "domain", "view_domains"],
         ["modoboa_admin", "domain", "view_domain"],
         ["modoboa_admin", "mailbox", "add_mailbox"],
@@ -84,6 +87,18 @@ class AdminConsole(ModoExtension):
         events.declare(ADMIN_EVENTS)
 
 exts_pool.register_extension(AdminConsole)
+
+
+@events.observe("GetExtraRoles")
+def extra_roles(user, account):
+    """Return new roles."""
+    filters = events.raiseQueryEvent(
+        "UserCanSetRole", user, "DomainAdmins", account
+    )
+    if user.has_perm("modoboa_admin.add_domain") and \
+            (not filters or True in filters):
+        return [("DomainAdmins", _("Domain administrator"))]
+    return []
 
 
 @events.observe("GetExtraRolePermissions")
