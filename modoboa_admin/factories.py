@@ -21,8 +21,11 @@ class DomainFactory(PermissionFactory):
 
 class MailboxFactory(PermissionFactory):
 
+    """A factory to create Mailbox instances."""
+
     class Meta:
         model = models.Mailbox
+        django_get_or_create = ("address", "domain")
 
     domain = factory.SubFactory(DomainFactory)
     user = factory.SubFactory(UserFactory)
