@@ -37,8 +37,8 @@ msgid ""
 "This operation will remove all data associated to this domain, excepting "
 "accounts."
 msgstr ""
-"Diese Aktion wird ALLE mit der Domain verbundenen Daten löschen - ausser "
-"Mailkonten."
+"Diese Aktion wird ALLE mit der Domain verbundenen Daten, außer Mailkonten, "
+"löschen."
 
 #: static/modoboa_admin/js/admin.js:230
 msgid "No domain administrator defined"
