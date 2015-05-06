@@ -1,4 +1,7 @@
 # coding: utf-8
+
+"""Internal library for modoboa_admin."""
+
 from functools import wraps
 from itertools import chain
 
@@ -86,17 +89,19 @@ def get_domains(user, domfilter=None, searchquery=None, **extrafilters):
     :rtype: list
     :return: a list of domains and/or relay domains
     """
-    domains = []
-    if domfilter is None or not domfilter or domfilter == 'domain':
-        domains = Domain.objects.get_for_admin(user)
-        if searchquery is not None:
-            q = Q(name__contains=searchquery)
-            q |= Q(domainalias__name__contains=searchquery)
-            domains = domains.filter(q).distinct()
-    extra_domain_entries = events.raiseQueryEvent(
-        'ExtraDomainEntries', user, domfilter, searchquery, **extrafilters
+    domains = Domain.objects.get_for_admin(user)
+    if domfilter:
+        domains = domains.filter(type=domfilter)
+    if searchquery is not None:
+        q = Q(name__contains=searchquery)
+        q |= Q(domainalias__name__contains=searchquery)
+        domains = domains.filter(q).distinct()
+    qset_filters = events.raiseDictEvent(
+        "ExtraDomainQsetFilters", domfilter, extrafilters
     )
-    return chain(domains, extra_domain_entries)
+    if qset_filters:
+        domains = domains.filter(**qset_filters)
+    return domains
 
 
 def check_if_domain_exists(name, extra_checks=None):

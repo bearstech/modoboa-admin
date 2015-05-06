@@ -39,6 +39,7 @@ class Domain(AdminObject):
         default=True
     )
     owners = generic.GenericRelation(ObjectAccess)
+    type = models.CharField(default="domain", max_length=20)
 
     objects = DomainManager()
 
@@ -70,7 +71,9 @@ class Domain(AdminObject):
 
     @property
     def tags(self):
-        return [{"name": "domain", "label": _("Domain"), "type": "dom"}]
+        if self.type == "domain":
+            return [{"name": "domain", "label": _("Domain"), "type": "dom"}]
+        return events.raiseQueryEvent("GetTagsForDomain", self)
 
     @property
     def admins(self):
