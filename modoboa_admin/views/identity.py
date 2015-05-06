@@ -126,8 +126,9 @@ def list_quotas(request):
 
 @login_required
 @user_passes_test(
-    lambda u: u.has_perm("modoboa_admin.add_user") or u.has_perm("modoboa_admin.add_alias")
-    or u.has_perm("modoboa_admin.add_mailbox")
+    lambda u: u.has_perm("modoboa_admin.add_user") or
+    u.has_perm("modoboa_admin.add_alias") or
+    u.has_perm("modoboa_admin.add_mailbox")
 )
 def get_next_page(request):
     """Return the next page of the identity list."""
