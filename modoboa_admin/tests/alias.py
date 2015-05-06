@@ -1,3 +1,5 @@
+"""Admin test cases."""
+
 from django.core.urlresolvers import reverse
 
 from modoboa.core.models import User
@@ -8,7 +10,6 @@ from ..models import Alias
 
 
 class AliasTestCase(ModoTestCase):
-    fixtures = ["initial_users.json"]
 
     def setUp(self):
         super(AliasTestCase, self).setUp()
@@ -61,6 +62,26 @@ class AliasTestCase(ModoTestCase):
             user.mailbox_set.first().alias_set.first().full_address,
             "titi@test.com"
         )
+
+    def test_append_alias_with_tag(self):
+        """Try to create a alias with tag in recipient address"""
+        user = User.objects.get(username="user@test.com")
+        values = dict(
+            username="user@test.com", role=user.group,
+            is_active=user.is_active, email="user@test.com"
+        )
+        self.ajax_post(
+            reverse("modoboa_admin:account_change", args=[user.id]),
+            values
+        )
+
+        values = {
+            "email": "foobar@test.com", "recipients": "user+spam@test.com",
+            "enabled": True
+        }
+        self.ajax_post(reverse("modoboa_admin:alias_add"), values)
+        alias = Alias.objects.get(address="foobar", domain__name="test.com")
+        self.assertEqual(alias.extmboxes, "user+spam@test.com")
 
     def test_dlist(self):
         values = dict(email="all@test.com",
