@@ -78,8 +78,9 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
 
         The validation way is not very smart...
         """
-        super(DomainFormGeneral, self).clean()
-        cleaned_data = self.cleaned_data
+        cleaned_data = super(DomainFormGeneral, self).clean()
+        if self._errors:
+            return cleaned_data
         name = cleaned_data["name"]
         label = check_if_domain_exists(name, [(DomainAlias, _('domain alias'))])
         if label is not None:
