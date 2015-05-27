@@ -28,8 +28,11 @@ class DomainAliasTestCase(ModoTestCase):
 
     def test_form(self):
         dom = Domain.objects.get(name="test.com")
-        values = dict(name=dom.name, quota=dom.quota, enabled=dom.enabled,
-                      aliases="domalias.net", aliases_1="domalias.com")
+        values = dict(
+            name=dom.name, quota=dom.quota, enabled=dom.enabled,
+            aliases="domalias.net", aliases_1="domalias.com",
+            type="domain"
+        )
         self.ajax_post(
             reverse("modoboa_admin:domain_change",
                     args=[dom.id]),

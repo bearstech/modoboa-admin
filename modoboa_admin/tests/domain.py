@@ -22,9 +22,9 @@ class DomainTestCase(ModoTestCase):
         """Test the creation of a domain."""
         values = {
             "name": "pouet.com", "quota": 100, "create_dom_admin": "no",
-            "stepid": 'step2'
+            "type": "domain", "stepid": 'step3'
         }
-        self.ajax_post(reverse("modoboa_admin:domain_add"), values)
+        resp = self.ajax_post(reverse("modoboa_admin:domain_add"), values)
         dom = Domain.objects.get(name="pouet.com")
         self.assertEqual(dom.name, "pouet.com")
         self.assertEqual(dom.quota, 100)
@@ -38,7 +38,7 @@ class DomainTestCase(ModoTestCase):
         values = {
             "name": "pouet.com", "quota": 100, "create_dom_admin": "yes",
             "dom_admin_username": "toto", "create_aliases": "yes",
-            "stepid": 'step2'
+            "type": "domain", "stepid": 'step3'
         }
         self.ajax_post(
             reverse("modoboa_admin:domain_add"),
@@ -56,7 +56,7 @@ class DomainTestCase(ModoTestCase):
         values = {
             "name": "pouet.com", "quota": 0, "create_dom_admin": "yes",
             "dom_admin_username": "toto", "create_aliases": "yes",
-            "stepid": 'step2'
+            "type": "domain", "stepid": 'step3'
         }
         self.ajax_post(
             reverse("modoboa_admin:domain_add"),
@@ -74,7 +74,7 @@ class DomainTestCase(ModoTestCase):
         values = {
             "name": "pouet.com", "create_dom_admin": "yes",
             "dom_admin_username": "toto", "create_aliases": "yes",
-            "stepid": 'step2'
+            "type": "domain", "stepid": 'step3'
         }
         self.ajax_post(
             reverse("modoboa_admin:domain_add"),
@@ -91,7 +91,7 @@ class DomainTestCase(ModoTestCase):
         Rename 'test.com' domain to 'pouet.com'
         """
         values = {
-            "name": "pouet.com", "quota": 100, "enabled": True
+            "name": "pouet.com", "quota": 100, "type": "domain", "enabled": True
         }
         dom = Domain.objects.get(name="test.com")
         self.ajax_post(

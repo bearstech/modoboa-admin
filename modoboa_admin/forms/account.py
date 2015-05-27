@@ -12,7 +12,7 @@ from modoboa.lib import events, parameters
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import PermDeniedException, Conflict, NotFound
 from modoboa.lib.form_utils import (
-    DomainNameField, DynamicForm, TabForms, WizardForm
+    DomainNameField, DynamicForm, TabForms, WizardForm, WizardStep
 )
 from modoboa.lib.permissions import get_account_roles
 from modoboa.lib.web_utils import render_to_json_response
@@ -455,10 +455,14 @@ class AccountWizard(WizardForm):
     def __init__(self, request):
         super(AccountWizard, self).__init__(request)
         self.add_step(
-            AccountFormGeneral, _("General"), new_args=[request.user]
+            WizardStep(
+                AccountFormGeneral, _("General"), new_args=[request.user]
+            )
         )
         self.add_step(
-            AccountFormMail, _("Mail"), formtpl="modoboa_admin/mailform.html"
+            WizardStep(
+                AccountFormMail, _("Mail"), "modoboa_admin/mailform.html"
+            )
         )
 
     def extra_context(self, context):
