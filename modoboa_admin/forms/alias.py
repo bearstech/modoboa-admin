@@ -13,6 +13,7 @@ from modoboa.lib.form_utils import (
 )
 
 from ..models import Domain, Mailbox, Alias
+from .. import signals
 
 
 class AliasForm(forms.ModelForm, DynamicForm):
@@ -115,7 +116,10 @@ class AliasForm(forms.ModelForm, DynamicForm):
 
             domain = Domain.objects.filter(name=domname).first()
 
-            if domain is not None:
+            if (
+                (domain is not None) and
+                (any(r[1] for r in signals.use_external_recipients.send(self, recipients=v)) is False)  # NOQA
+            ):
                 rcpt = Alias.objects.filter(
                     domain=domain, address=local_part).first()
                 if rcpt and (rcpt.full_address == self.cleaned_data["email"]):
