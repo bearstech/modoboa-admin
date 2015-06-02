@@ -5,13 +5,15 @@ from django.utils.translation import ugettext as _, ugettext_lazy
 
 import reversion
 
-from .base import AdminObject
-from .domain import Domain
-from .mailbox import Mailbox
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import (
     PermDeniedException, BadRequest, Conflict
 )
+
+from .base import AdminObject
+from .domain import Domain
+from .mailbox import Mailbox
+from .. import signals
 
 
 class Alias(AdminObject):
@@ -75,6 +77,7 @@ class Alias(AdminObject):
     @property
     def type(self):
         cpt = self.get_recipients_count()
+
         if cpt > 1:
             return "dlist"
         if self.extmboxes != "":
@@ -180,6 +183,15 @@ class Alias(AdminObject):
             if not rcpt:
                 continue
             localpart, domname = split_mailbox(rcpt)
+            if (
+                any(
+                    r[1] for r in signals.use_external_recipients.send(
+                        None, recipients=rcpt
+                ))
+            ):
+                ext_rcpts += [rcpt]
+                continue
+
             try:
                 Domain.objects.get(name=domname)
             except Domain.DoesNotExist:
