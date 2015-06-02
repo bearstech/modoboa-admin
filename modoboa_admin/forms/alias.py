@@ -118,7 +118,12 @@ class AliasForm(forms.ModelForm, DynamicForm):
 
             if (
                 (domain is not None) and
-                (any(r[1] for r in signals.use_external_recipients.send(self, recipients=v)) is False)  # NOQA
+                (
+                    any(
+                        r[1] for r in signals.use_external_recipients.send(
+                            self, recipients=v)
+                    ) is False
+                )
             ):
                 rcpt = Alias.objects.filter(
                     domain=domain, address=local_part).first()

@@ -183,7 +183,12 @@ class Alias(AdminObject):
             if not rcpt:
                 continue
             localpart, domname = split_mailbox(rcpt)
-            if (any(r[1] for r in signals.use_external_recipients.send(None, recipients=rcpt))):  # NOQA
+            if (
+                any(
+                    r[1] for r in signals.use_external_recipients.send(
+                        None, recipients=rcpt
+                ))
+            ):
                 ext_rcpts += [rcpt]
                 continue
 
