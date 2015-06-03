@@ -359,15 +359,17 @@ class DomainWizard(WizardForm):
     def __init__(self, request):
         super(DomainWizard, self).__init__(request)
         self.add_step(
-            WizardStep(DomainFormGeneral, _("General"),
-                       "modoboa_admin/domain_general_form.html")
+            WizardStep(
+                "general", DomainFormGeneral, _("General"),
+                "modoboa_admin/domain_general_form.html"
+            )
         )
         steps = events.raiseQueryEvent("ExtraDomainWizardSteps")
         for step in steps:
             self.add_step(step)
         self.add_step(
             WizardStep(
-                DomainFormOptions, _("Options"),
+                "options", DomainFormOptions, _("Options"),
                 "modoboa_admin/domain_options_form.html",
                 [self.request.user]
             )

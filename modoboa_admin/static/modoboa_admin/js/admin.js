@@ -240,10 +240,10 @@ Domains.prototype = {
         $("#wizard").cwizard({
             formid: "domform",
             transition_callbacks: {
-                1: this.optionsform_prefill
+                "options": this.optionsform_prefill
             },
             error_callbacks: {
-                2: $.proxy(this.optionsform_init, this)
+                "options": $.proxy(this.optionsform_init, this)
             },
             success_callback: $.proxy(this.reload_listing, this)
         });
@@ -511,7 +511,7 @@ Identities.prototype = {
         $("#wizard").cwizard({
             formid: "newaccount_form",
             transition_callbacks: {
-                1: this.mailform_prefill
+                "mail": this.mailform_prefill
             },
             success_callback: $.proxy(this.reload_listing, this)
         });

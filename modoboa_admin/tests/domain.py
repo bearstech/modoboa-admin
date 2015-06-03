@@ -22,9 +22,9 @@ class DomainTestCase(ModoTestCase):
         """Test the creation of a domain."""
         values = {
             "name": "pouet.com", "quota": 100, "create_dom_admin": "no",
-            "type": "domain", "stepid": 'step3'
+            "type": "domain", "stepid": "step3"
         }
-        resp = self.ajax_post(reverse("modoboa_admin:domain_add"), values)
+        self.ajax_post(reverse("modoboa_admin:domain_add"), values)
         dom = Domain.objects.get(name="pouet.com")
         self.assertEqual(dom.name, "pouet.com")
         self.assertEqual(dom.quota, 100)

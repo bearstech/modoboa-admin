@@ -456,12 +456,14 @@ class AccountWizard(WizardForm):
         super(AccountWizard, self).__init__(request)
         self.add_step(
             WizardStep(
-                AccountFormGeneral, _("General"), new_args=[request.user]
+                "general", AccountFormGeneral, _("General"),
+                new_args=[request.user]
             )
         )
         self.add_step(
             WizardStep(
-                AccountFormMail, _("Mail"), "modoboa_admin/mailform.html"
+                "mail", AccountFormMail, _("Mail"),
+                "modoboa_admin/mailform.html"
             )
         )
 
