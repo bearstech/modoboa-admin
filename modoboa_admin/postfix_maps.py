@@ -8,9 +8,18 @@ class DomainsMap(object):
     """Map to list all domains."""
 
     filename = 'sql-domains.cf'
-    mysql = "SELECT name FROM admin_domain WHERE name='%s' AND enabled=1"
-    postgres = "SELECT name FROM admin_domain WHERE name='%s' AND enabled"
-    sqlite = "SELECT name FROM admin_domain WHERE name='%s' AND enabled=1"
+    mysql = (
+        "SELECT name FROM admin_domain "
+        "WHERE name='%s' AND type='domain' AND enabled=1"
+    )
+    postgres = (
+        "SELECT name FROM admin_domain "
+        "WHERE name='%s' AND type='domain' AND enabled"
+    )
+    sqlite = (
+        "SELECT name FROM admin_domain "
+        "WHERE name='%s' AND type='domain' AND enabled=1"
+    )
 
 
 class DomainsAliasesMap(object):

@@ -56,6 +56,15 @@ class AdminParametersForm(parameters.AdminParametersForm):
         )
     )
 
+    allow_mailbox_creation_all_domain = YesNoField(
+        label=ugettext_lazy(
+            "Allow mailbox creation on any domain type"),
+        initial="no",
+        help_text=ugettext_lazy(
+            "Allow administrators to create mailboxes on any domain type."
+        )
+    )
+
     # Visibility rules
     visibility_rules = {
         "mailboxes_owner": "handle_mailboxes=yes",

@@ -9,7 +9,7 @@ from modoboa.core.models import User
 from modoboa.lib import events, parameters
 from modoboa.lib.exceptions import ModoboaException, Conflict
 from modoboa.lib.form_utils import (
-    DomainNameField, YesNoField, WizardForm, DynamicForm, TabForms
+    DomainNameField, YesNoField, WizardForm, WizardStep, DynamicForm, TabForms
 )
 from modoboa.lib.web_utils import render_to_json_response
 
@@ -18,8 +18,19 @@ from ..models import (
     Domain, DomainAlias, Mailbox, Alias, Quota
 )
 
+DOMAIN_TYPES = [
+    ("domain", _("Domain")),
+]
+DOMAIN_TYPES += events.raiseQueryEvent("ExtraDomainTypes")
+
 
 class DomainFormGeneral(forms.ModelForm, DynamicForm):
+
+    """A form to create/edit a domain."""
+
+    type = forms.ChoiceField(
+        label=ugettext_lazy("Type"), choices=DOMAIN_TYPES
+    )
     quota = forms.IntegerField(
         label=ugettext_lazy("Quota"),
         required=False,
@@ -36,13 +47,10 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
             "press ENTER to add a new input."
         )
     )
-    name = DomainNameField(
-        widget=forms.TextInput()
-    )
 
     class Meta:
         model = Domain
-        fields = ("name", "quota", "aliases", "enabled")
+        fields = ("name", "type", "quota", "aliases", "enabled")
 
     def __init__(self, *args, **kwargs):
         self.oldname = None
@@ -181,6 +189,9 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
 
 
 class DomainFormOptions(forms.Form):
+
+    """A form containing options for domain creation."""
+
     create_dom_admin = YesNoField(
         label=ugettext_lazy("Create a domain administrator"),
         initial="no",
@@ -225,11 +236,13 @@ class DomainFormOptions(forms.Form):
             raise forms.ValidationError(_("Invalid format"))
         return self.cleaned_data["dom_admin_username"]
 
-    def save(self, user, domain):
+    def save(self, *args, **kwargs):
         if not self.fields:
             return
         if self.cleaned_data["create_dom_admin"] == "no":
             return
+        user = kwargs.pop("user")
+        domain = kwargs.pop("domain")
         username = "%s@%s" % (
             self.cleaned_data["dom_admin_username"], domain.name)
         try:
@@ -244,15 +257,18 @@ class DomainFormOptions(forms.Form):
         da.save()
         da.set_role("DomainAdmins")
         da.post_create(user)
-        mb = Mailbox(
-            address=self.cleaned_data["dom_admin_username"], domain=domain,
-            user=da, use_domain_quota=True
-        )
-        mb.set_quota(
-            override_rules=user.has_perm("modoboa_admin.change_domain"))
-        mb.save(creator=user)
+        if domain.type == "domain" or \
+           parameters.get_admin("ALLOW_MAILBOX_CREATION_ALL_DOMAIN") == "yes":
+            mb = Mailbox(
+                address=self.cleaned_data["dom_admin_username"], domain=domain,
+                user=da, use_domain_quota=True
+            )
+            mb.set_quota(
+                override_rules=user.has_perm("modoboa_admin.change_domain"))
+            mb.save(creator=user)
 
-        if self.cleaned_data["create_aliases"] == "yes":
+        if domain.type == "domain" and \
+           self.cleaned_data["create_aliases"] == "yes":
             events.raiseEvent("CanCreate", user, "mailbox_aliases")
             alias = Alias(address="postmaster", domain=domain, enabled=True)
             alias.save(int_rcpts=[mb])
@@ -338,19 +354,25 @@ class DomainForm(TabForms):
 
 class DomainWizard(WizardForm):
 
-    """Domain creation wizard.
-    """
+    """Domain creation wizard."""
 
     def __init__(self, request):
         super(DomainWizard, self).__init__(request)
         self.add_step(
-            DomainFormGeneral, _("General"),
-            formtpl="modoboa_admin/domain_general_form.html"
+            WizardStep(
+                "general", DomainFormGeneral, _("General"),
+                "modoboa_admin/domain_general_form.html"
+            )
         )
+        steps = events.raiseQueryEvent("ExtraDomainWizardSteps")
+        for step in steps:
+            self.add_step(step)
         self.add_step(
-            DomainFormOptions, _("Options"),
-            formtpl="modoboa_admin/domain_options_form.html",
-            new_args=[self.request.user]
+            WizardStep(
+                "options", DomainFormOptions, _("Options"),
+                "modoboa_admin/domain_options_form.html",
+                [self.request.user]
+            )
         )
 
     def extra_context(self, context):
@@ -364,10 +386,13 @@ class DomainWizard(WizardForm):
         genform = self.first_step.form
         domain = genform.save(self.request.user)
         domain.post_create(self.request.user)
-        try:
-            self.steps[1].form.save(self.request.user, domain)
-        except ModoboaException:
-            from django.db import transaction
-            transaction.rollback()
-            raise
+        for step in self.steps[1:]:
+            if not step.check_access(self):
+                continue
+            try:
+                step.form.save(user=self.request.user, domain=domain)
+            except ModoboaException:
+                from django.db import transaction
+                transaction.rollback()
+                raise
         return render_to_json_response(_("Domain created"))

@@ -15,7 +15,20 @@ class DomainFactory(PermissionFactory):
         model = models.Domain
         django_get_or_create = ("name", )
 
+    type = "domain"
     quota = 10
+    enabled = True
+
+
+class DomainAliasFactory(PermissionFactory):
+
+    """Factory to create DomainAlias objects."""
+
+    class Meta:
+        model = models.DomainAlias
+        django_get_or_create = ("name", )
+
+    target = factory.SubFactory(DomainFactory)
     enabled = True
 
 
