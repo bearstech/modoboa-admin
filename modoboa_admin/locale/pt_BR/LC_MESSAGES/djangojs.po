@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-04 16:01+0100\n"
+"POT-Creation-Date: 2015-06-03 17:38+0200\n"
 "PO-Revision-Date: 2014-12-13 09:14+0000\n"
 "Last-Translator: Paulino Michelazzo <paulino@michelazzo.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
@@ -54,98 +54,3 @@ msgstr "Não remova o diretório de caixas de mensagens"
 #: static/modoboa_admin/js/admin.js:356
 msgid "No more quota to show"
 msgstr "Nenhuma quota a mais para mostrar"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

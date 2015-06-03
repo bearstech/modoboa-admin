@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-04 16:01+0100\n"
+"POT-Creation-Date: 2015-06-03 17:38+0200\n"
 "PO-Revision-Date: 2013-12-23 00:58+0100\n"
 "Last-Translator: Alberto Berti <alberto@metapensiero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -52,27 +52,3 @@ msgstr "Non eliminare la cartella della casella posta"
 #: static/modoboa_admin/js/admin.js:356
 msgid "No more quota to show"
 msgstr ""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
