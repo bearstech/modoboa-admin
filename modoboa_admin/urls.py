@@ -46,7 +46,7 @@ urlpatterns += patterns(
 )
 
 urlpatterns += patterns(
-    'modoboa_admin.views.import',
+    'modoboa_admin.views.import_',
 
     url(r'^domains/import/$', 'import_domains', name="domain_import"),
     url(r'^identities/import/$', 'import_identities', name="identity_import"),
