@@ -183,11 +183,16 @@ class Alias(AdminObject):
             if not rcpt:
                 continue
             localpart, domname = split_mailbox(rcpt)
+            localpart_with_tag = None
+            if '+' in localpart:
+                localpart_with_tag = localpart
+                localpart = localpart[0:localpart.find('+')]
+
             if (
                 any(
                     r[1] for r in signals.use_external_recipients.send(
-                        None, recipients=rcpt
-                ))
+                        None, recipients=rcpt)
+                )
             ):
                 ext_rcpts += [rcpt]
                 continue
@@ -211,7 +216,12 @@ class Alias(AdminObject):
                                                  domain__name=domname)
                 except Mailbox.DoesNotExist:
                     raise BadRequest(_("Local recipient %s not found" % rcpt))
-            int_rcpts += [target]
+
+            if localpart_with_tag:
+                ext_rcpts += [rcpt]
+            else:
+                int_rcpts += [target]
+
         self.save(int_rcpts=int_rcpts, ext_rcpts=ext_rcpts)
         self.post_create(user)
 
