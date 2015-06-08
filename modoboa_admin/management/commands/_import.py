@@ -33,7 +33,6 @@ def import_csv(filename, options):
                     continue
                 fct = fct[0]
 
-            print(row)
             try:
                 fct(superadmin, row, options)
             except Conflict:
