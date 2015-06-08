@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 17:38+0200\n"
+"POT-Creation-Date: 2015-06-08 14:19+0200\n"
 "PO-Revision-Date: 2015-01-13 15:18+0000\n"
 "Last-Translator: Olle Gustafsson <olle@dalnix.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/projects/p/modoboa/language/"
@@ -73,15 +73,7 @@ msgstr "Automatisk skapande av domän/brevlåda"
 msgid "Create a domain and a mailbox when an account is automatically created."
 msgstr "Skapa en domän och en brevlåda när ett konto skapas automatiskt."
 
-#: app_settings.py:61
-msgid "Allow mailbox creation on any domain type"
-msgstr ""
-
-#: app_settings.py:64
-msgid "Allow administrators to create mailboxes on any domain type."
-msgstr ""
-
-#: app_settings.py:109 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr "Måste vara ett positivt heltal"
 
@@ -183,8 +175,8 @@ msgstr "Domän(er)"
 msgid "Domain(s) that user administrates"
 msgstr "Domän(er) användaren administrerar"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:293
-#: forms/domain.py:363
+#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/domain.py:362
 msgid "General"
 msgstr "Generellt"
 
@@ -338,19 +330,19 @@ msgstr "Ogiltigt format"
 msgid "User '%s' already exists"
 msgstr "Användare '%s' finns redan"
 
-#: forms/domain.py:352
+#: forms/domain.py:351
 msgid "Domain modified"
 msgstr "Domän ändrad"
 
-#: forms/domain.py:372
+#: forms/domain.py:371
 msgid "Options"
 msgstr "Inställningar"
 
-#: forms/domain.py:380
+#: forms/domain.py:379
 msgid "New domain"
 msgstr "Ny domän"
 
-#: forms/domain.py:398
+#: forms/domain.py:397
 msgid "Domain created"
 msgstr "Domän skapad"
 

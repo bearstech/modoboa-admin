@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modoboa-1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 17:38+0200\n"
+"POT-Creation-Date: 2015-06-08 14:19+0200\n"
 "PO-Revision-Date: 2011-01-07 10:00+100\n"
 "Last-Translator: Antoine Nguyen <tonio@ngyn.org>\n"
 "Language-Team: FR <tonio@ngyn.org>\n"
@@ -73,15 +73,7 @@ msgstr ""
 "Créer un domaine et une boite aux lettres quand un compte est créé "
 "automatiquement."
 
-#: app_settings.py:61
-msgid "Allow mailbox creation on any domain type"
-msgstr ""
-
-#: app_settings.py:64
-msgid "Allow administrators to create mailboxes on any domain type."
-msgstr ""
-
-#: app_settings.py:109 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr "Doit être un entier positif"
 
@@ -183,8 +175,8 @@ msgstr "Domaine(s)"
 msgid "Domain(s) that user administrates"
 msgstr "Domaine(s) que cet utilisateur administre"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:293
-#: forms/domain.py:363
+#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/domain.py:362
 msgid "General"
 msgstr "Général"
 
@@ -338,19 +330,19 @@ msgstr "Format invalide"
 msgid "User '%s' already exists"
 msgstr "L'utilisateur '%s' existe déjà"
 
-#: forms/domain.py:352
+#: forms/domain.py:351
 msgid "Domain modified"
 msgstr "Domaine modifié"
 
-#: forms/domain.py:372
+#: forms/domain.py:371
 msgid "Options"
 msgstr "Options"
 
-#: forms/domain.py:380
+#: forms/domain.py:379
 msgid "New domain"
 msgstr "Nouveau domaine"
 
-#: forms/domain.py:398
+#: forms/domain.py:397
 msgid "Domain created"
 msgstr "Domaine créé"
 

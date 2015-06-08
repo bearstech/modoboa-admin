@@ -257,15 +257,14 @@ class DomainFormOptions(forms.Form):
         da.save()
         da.set_role("DomainAdmins")
         da.post_create(user)
-        if domain.type == "domain" or \
-           parameters.get_admin("ALLOW_MAILBOX_CREATION_ALL_DOMAIN") == "yes":
-            mb = Mailbox(
-                address=self.cleaned_data["dom_admin_username"], domain=domain,
-                user=da, use_domain_quota=True
-            )
-            mb.set_quota(
-                override_rules=user.has_perm("modoboa_admin.change_domain"))
-            mb.save(creator=user)
+
+        mb = Mailbox(
+            address=self.cleaned_data["dom_admin_username"], domain=domain,
+            user=da, use_domain_quota=True
+        )
+        mb.set_quota(
+            override_rules=user.has_perm("modoboa_admin.change_domain"))
+        mb.save(creator=user)
 
         if domain.type == "domain" and \
            self.cleaned_data["create_aliases"] == "yes":

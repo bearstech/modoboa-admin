@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 17:38+0200\n"
+"POT-Creation-Date: 2015-06-08 14:19+0200\n"
 "PO-Revision-Date: 2013-12-23 00:56+0100\n"
 "Last-Translator: Alberto Berti <alberto@metapensiero.it>\n"
 "Language-Team: ITALIANO <LL@li.org>\n"
@@ -72,15 +72,7 @@ msgstr "Dominio creato"
 msgid "Create a domain and a mailbox when an account is automatically created."
 msgstr ""
 
-#: app_settings.py:61
-msgid "Allow mailbox creation on any domain type"
-msgstr ""
-
-#: app_settings.py:64
-msgid "Allow administrators to create mailboxes on any domain type."
-msgstr ""
-
-#: app_settings.py:109 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr "Dev'essere un intero positivo"
 
@@ -183,8 +175,8 @@ msgstr "Dominio(i)"
 msgid "Domain(s) that user administrates"
 msgstr "Dominio(i) amministrato(i) dall'utente"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:293
-#: forms/domain.py:363
+#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/domain.py:362
 msgid "General"
 msgstr "Generale"
 
@@ -336,19 +328,19 @@ msgstr "Formato non valido"
 msgid "User '%s' already exists"
 msgstr "L'utente '%s' esiste già"
 
-#: forms/domain.py:352
+#: forms/domain.py:351
 msgid "Domain modified"
 msgstr "Dominio modificato"
 
-#: forms/domain.py:372
+#: forms/domain.py:371
 msgid "Options"
 msgstr "Opzioni"
 
-#: forms/domain.py:380
+#: forms/domain.py:379
 msgid "New domain"
 msgstr "Nuovo dominio"
 
-#: forms/domain.py:398
+#: forms/domain.py:397
 msgid "Domain created"
 msgstr "Dominio creato"
 
