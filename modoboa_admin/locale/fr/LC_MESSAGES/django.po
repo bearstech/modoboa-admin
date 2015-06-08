@@ -233,16 +233,12 @@ msgid "Invalid mailbox"
 msgstr "Boite aux lettres invalide"
 
 #: forms/alias.py:138
-#, fuzzy
-#| msgid "Local recipient %s not found"
 msgid "Local recipient {}@{} not found"
-msgstr "Destinataire local %s introuvable"
+msgstr "Destinataire local {}@{} introuvable"
 
 #: forms/alias.py:144
-#, fuzzy
-#| msgid "Recipient %s already present"
 msgid "Recipient {} already present"
-msgstr "Destinataire %s déjà présent"
+msgstr "Destinataire {} déjà présent"
 
 #: forms/alias.py:152
 #, python-format
@@ -532,10 +528,8 @@ msgid "Administration"
 msgstr "Administration"
 
 #: modo_extension.py:103
-#, fuzzy
-#| msgid "Create a domain administrator"
 msgid "Domain administrator"
-msgstr "Créer un administrateur de domaine"
+msgstr "Administrateur de domaine"
 
 #: modo_extension.py:132 templates/modoboa_admin/domain_statistics.html:30
 #: templates/modoboa_admin/domains.html:3
