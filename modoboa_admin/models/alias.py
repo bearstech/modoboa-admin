@@ -182,11 +182,8 @@ class Alias(AdminObject):
             rcpt = rcpt.strip()
             if not rcpt:
                 continue
-            localpart, domname = split_mailbox(rcpt)
-            localpart_with_tag = None
-            if '+' in localpart:
-                localpart_with_tag = localpart
-                localpart = localpart[0:localpart.find('+')]
+            localpart, domname, extension = (
+                split_mailbox(rcpt, return_extension=True))
 
             if (
                 any(
@@ -217,7 +214,7 @@ class Alias(AdminObject):
                 except Mailbox.DoesNotExist:
                     raise BadRequest(_("Local recipient %s not found" % rcpt))
 
-            if localpart_with_tag:
+            if extension:
                 ext_rcpts += [rcpt]
             else:
                 int_rcpts += [target]

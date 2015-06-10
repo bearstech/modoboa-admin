@@ -102,18 +102,12 @@ class AliasForm(forms.ModelForm, DynamicForm):
                 continue
             if v == "":
                 continue
-            local_part, domname = split_mailbox(v)
+            local_part, domname, extension = (
+                split_mailbox(v, return_extension=True))
             if domname is None:
                 raise BadRequest(
                     u"%s %s" % (_("Invalid mailbox"), v)
                 )
-            # Support tag in recipient, see
-            # https://github.com/tonioo/modoboa/issues/713
-            local_part_with_tag = None
-            if '+' in local_part:
-                local_part_with_tag = local_part
-                local_part = local_part[0:local_part.find('+')]
-
             domain = Domain.objects.filter(name=domname).first()
 
             if (
@@ -138,7 +132,7 @@ class AliasForm(forms.ModelForm, DynamicForm):
                             _("Local recipient {}@{} not found")
                             .format(local_part, domname)
                         )
-                if local_part_with_tag is None:
+                if extension is None:
                     if rcpt in self.int_rcpts:
                         raise Conflict(
                             _("Recipient {} already present").format(v)
