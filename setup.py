@@ -57,7 +57,7 @@ def read(fname):
 
 setup(
     name="modoboa-admin",
-    version='1.0.2',
+    version='1.1.0',
     url='http://modoboa.org/',
     license='MIT',
     description="The administration panel of Modoboa",

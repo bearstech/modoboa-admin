@@ -75,7 +75,7 @@ PERMISSIONS = {
 class AdminConsole(ModoExtension):
     name = "modoboa_admin"
     label = ugettext_lazy("Administration console")
-    version = "1.0.2"
+    version = "1.1.0"
     description = ugettext_lazy(
         "Web based console to manage domains, accounts and aliases"
     )
