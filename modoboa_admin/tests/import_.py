@@ -55,6 +55,7 @@ domainalias;test.alias;test.com;True
 account; user1@test.com; toto; User; One; True; SimpleUsers; user1@test.com; 0
 account; truc@test.com; toto; René; Truc; True; DomainAdmins; truc@test.com; 5; test.com
 alias; alias1@test.com; True; user1@test.com
+forward; alias2@test.com; True; user1+ext@test.com
 forward; fwd1@test.com; True; user@extdomain.com
 dlist; dlist@test.com; True; user1@test.com; user@extdomain.com
 """, name="identities.csv")
