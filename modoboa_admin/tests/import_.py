@@ -115,6 +115,28 @@ account; user1@test.com; toto; User; One; True; SimpleUsers; user1@test.com; ; t
         )
         self.assertIn('wrong quota value', resp.content)
 
+    def test_import_domain_by_domainadmin(self):
+        """Check if a domain admin is not allowed to import a domain."""
+        self.clt.logout()
+        self.clt.login(username="admin@test.com", password="toto")
+        f = ContentFile(b"""
+domain; domain2.com; 200; False
+""", name="identities.csv")
+        resp = self.clt.post(
+            reverse("modoboa_admin:identity_import"),
+            {"sourcefile": f, "crypt_password": True}
+        )
+        self.assertIn("You are not allowed to import domains", resp.content)
+        f = ContentFile(b"""
+domainalias; domalias1.com; domain1.com; True
+""", name="identities.csv")
+        resp = self.clt.post(
+            reverse("modoboa_admin:identity_import"),
+            {"sourcefile": f, "crypt_password": True}
+        )
+        self.assertIn(
+            "You are not allowed to import domain aliases", resp.content)
+
     def test_import_quota_too_big(self):
         self.clt.logout()
         self.clt.login(username="admin@test.com", password="toto")

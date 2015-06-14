@@ -11,7 +11,7 @@ from ._import import import_csv
 
 class Command(BaseCommand, CloseConnectionMixin):
     args = 'csvfile'
-    help = 'Import identities csv file'
+    help = 'Import identities from a csv file'
 
     option_list = BaseCommand.option_list + (
         make_option(

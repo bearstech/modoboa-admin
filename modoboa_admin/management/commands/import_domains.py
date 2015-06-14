@@ -12,7 +12,7 @@ from ._import import import_csv
 
 class Command(BaseCommand, CloseConnectionMixin):
     args = 'csvfile'
-    help = 'Import domains csv file'
+    help = 'Import domains and domain aliases from a csv file'
 
     option_list = BaseCommand.option_list + (
         make_option(

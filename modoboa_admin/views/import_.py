@@ -11,24 +11,68 @@ from django.utils.translation import ugettext as _
 
 import reversion
 
-from modoboa.core.models import User
 from modoboa.lib import events
 from modoboa.lib.exceptions import ModoboaException, Conflict
 
 from ..forms import ImportIdentitiesForm, ImportDataForm
-from ..models import Domain, DomainAlias, Alias
+from .. import lib
 
 
-def import_domain(user, row, formopts):
-    """Specific code for domains import"""
-    dom = Domain()
-    dom.from_csv(user, row)
+@reversion.create_revision()
+def importdata(request, formclass=ImportDataForm):
+    """Generic import function
 
+    As the process of importing data from a CSV file is the same
+    whatever the type, we do a maximum of the work here.
 
-def import_domainalias(user, row, formopts):
-    """Specific code for domain aliases import"""
-    domalias = DomainAlias()
-    domalias.from_csv(user, row)
+    :param request: a ``Request`` instance
+    :param typ: a string indicating the object type being imported
+    :return: a ``Response`` instance
+    """
+    error = None
+    form = formclass(request.POST, request.FILES)
+    if form.is_valid():
+        try:
+            reader = csv.reader(request.FILES['sourcefile'],
+                                delimiter=form.cleaned_data['sepchar'])
+        except csv.Error as inst:
+            error = str(inst)
+
+        if error is None:
+            try:
+                cpt = 0
+                for row in reader:
+                    if not row:
+                        continue
+                    try:
+                        fct = getattr(lib, "import_%s" % row[0].strip())
+                    except AttributeError:
+                        fct = events.raiseQueryEvent(
+                            'ImportObject', row[0].strip()
+                        )
+                        if not fct:
+                            continue
+                        fct = fct[0]
+                    try:
+                        fct(request.user, row, form.cleaned_data)
+                    except Conflict:
+                        if form.cleaned_data["continue_if_exists"]:
+                            continue
+                        raise Conflict(
+                            _("Object already exists: %s"
+                              % form.cleaned_data['sepchar'].join(row[:2]))
+                        )
+                    cpt += 1
+                msg = _("%d objects imported successfully" % cpt)
+                return render(request, "modoboa_admin/import_done.html", {
+                    "status": "ok", "msg": msg
+                })
+            except (ModoboaException) as e:
+                error = str(e)
+
+    return render(request, "modoboa_admin/import_done.html", {
+        "status": "ko", "msg": error
+    })
 
 
 @login_required
@@ -60,87 +104,6 @@ def import_domains(request):
         form=ImportDataForm()
     )
     return render(request, "modoboa_admin/importform.html", ctx)
-
-
-def import_account(user, row, formopts):
-    """Specific code for accounts import"""
-    account = User()
-    account.from_csv(user, row, formopts["crypt_password"])
-
-
-def _import_alias(user, row, **kwargs):
-    """Specific code for aliases import"""
-    alias = Alias()
-    alias.from_csv(user, row, **kwargs)
-
-
-def import_alias(user, row, formopts):
-    _import_alias(user, row, expected_elements=4)
-
-
-def import_forward(user, row, formopts):
-    _import_alias(user, row, expected_elements=4)
-
-
-def import_dlist(user, row, formopts):
-    _import_alias(user, row)
-
-
-@reversion.create_revision()
-def importdata(request, formclass=ImportDataForm):
-    """Generic import function
-
-    As the process of importing data from a CSV file is the same
-    whatever the type, we do a maximum of the work here.
-
-    :param request: a ``Request`` instance
-    :param typ: a string indicating the object type being imported
-    :return: a ``Response`` instance
-    """
-    error = None
-    form = formclass(request.POST, request.FILES)
-    if form.is_valid():
-        try:
-            reader = csv.reader(request.FILES['sourcefile'],
-                                delimiter=form.cleaned_data['sepchar'])
-        except csv.Error as inst:
-            error = str(inst)
-
-        if error is None:
-            try:
-                cpt = 0
-                for row in reader:
-                    if not row:
-                        continue
-                    try:
-                        fct = globals()["import_%s" % row[0].strip()]
-                    except KeyError:
-                        fct = events.raiseQueryEvent(
-                            'ImportObject', row[0].strip()
-                        )
-                        if not fct:
-                            continue
-                        fct = fct[0]
-                    try:
-                        fct(request.user, row, form.cleaned_data)
-                    except Conflict:
-                        if form.cleaned_data["continue_if_exists"]:
-                            continue
-                        raise Conflict(
-                            _("Object already exists: %s"
-                              % form.cleaned_data['sepchar'].join(row[:2]))
-                        )
-                    cpt += 1
-                msg = _("%d objects imported successfully" % cpt)
-                return render(request, "modoboa_admin/import_done.html", {
-                    "status": "ok", "msg": msg
-                })
-            except (ModoboaException) as e:
-                error = str(e)
-
-    return render(request, "modoboa_admin/import_done.html", {
-        "status": "ko", "msg": error
-    })
 
 
 @login_required

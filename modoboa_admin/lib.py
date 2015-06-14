@@ -14,7 +14,7 @@ from modoboa.lib import events
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import PermDeniedException
 
-from .models import Domain, Alias
+from .models import Domain, DomainAlias, Alias
 
 
 def needs_mailbox():
@@ -118,3 +118,44 @@ def check_if_domain_exists(name, extra_checks=None):
         if dtype.objects.filter(name=name).exists():
             return label
     return None
+
+
+def import_domain(user, row, formopts):
+    """Specific code for domains import"""
+    if not user.has_perm("admin.add_domain"):
+        raise PermDeniedException(_("You are not allowed to import domains"))
+    dom = Domain()
+    dom.from_csv(user, row)
+
+
+def import_domainalias(user, row, formopts):
+    """Specific code for domain aliases import"""
+    if not user.has_perm("admin.add_domainalias"):
+        raise PermDeniedException(
+            _("You are not allowed to import domain aliases."))
+    domalias = DomainAlias()
+    domalias.from_csv(user, row)
+
+
+def import_account(user, row, formopts):
+    """Specific code for accounts import"""
+    account = User()
+    account.from_csv(user, row, formopts["crypt_password"])
+
+
+def _import_alias(user, row, **kwargs):
+    """Specific code for aliases import"""
+    alias = Alias()
+    alias.from_csv(user, row, **kwargs)
+
+
+def import_alias(user, row, formopts):
+    _import_alias(user, row, expected_elements=4)
+
+
+def import_forward(user, row, formopts):
+    _import_alias(user, row, expected_elements=4)
+
+
+def import_dlist(user, row, formopts):
+    _import_alias(user, row)
