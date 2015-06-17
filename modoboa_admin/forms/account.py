@@ -21,6 +21,9 @@ from ..models import Domain, Mailbox, Alias
 
 
 class AccountFormGeneral(forms.ModelForm):
+
+    """General account form."""
+
     username = forms.CharField(
         label=ugettext_lazy("Username"),
         help_text=ugettext_lazy(
@@ -46,14 +49,17 @@ class AccountFormGeneral(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "role", "is_active")
+        fields = (
+            "username", "first_name", "last_name", "role", "is_active",
+            "master_user"
+        )
 
     def __init__(self, user, *args, **kwargs):
         super(AccountFormGeneral, self).__init__(*args, **kwargs)
         self.fields = OrderedDict(
             (key, self.fields[key]) for key in
             ['role', 'username', 'first_name', 'last_name', 'password1',
-             'password2', 'is_active']
+             'password2', 'master_user', 'is_active']
         )
         self.fields["is_active"].label = _("Enabled")
         self.user = user
@@ -68,6 +74,9 @@ class AccountFormGeneral(forms.ModelForm):
             self.fields["role"].choices += \
                 get_account_roles(user, kwargs['instance']) \
                 if 'instance' in kwargs else get_account_roles(user)
+
+        if not user.is_superuser:
+            del self.fields["master_user"]
 
         if "instance" in kwargs:
             account = kwargs["instance"]
@@ -116,6 +125,18 @@ class AccountFormGeneral(forms.ModelForm):
         uname = self.cleaned_data["username"].lower()
         validate_email(uname)
         return uname
+
+    def clean_master_user(self):
+        """Check role before allowing this mode."""
+        conditions = (
+            self.cleaned_data["master_user"],
+            self.cleaned_data["role"] != "SuperAdmins"
+        )
+        if all(conditions):
+            raise forms.ValidationError(
+                _("Only super administrators are allowed for this mode")
+            )
+        return self.cleaned_data["master_user"]
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1", "")

@@ -433,10 +433,25 @@ Identities.prototype = {
             .autocompleter("unbind");
     },
 
-    normal_mode: function() {
+    normal_mode: function(group) {
         $("#id_email").removeClass("disabled")
             .attr("readonly", null)
             .autocompleter("listen");
+        this.toggle_master_user(group);
+    },
+
+    /**
+     * Hide or show the master user checkbox according to desired role.
+     *
+     * @param {string} group - The desired role (or group)
+     */
+    toggle_master_user: function(group) {
+        var $target = $("#id_master_user").parents(".form-group");
+        if (group !== "SuperAdmins") {
+            $target.hide();
+        } else {
+            $target.show();
+        }
     },
 
     generalform_init: function(notrigger) {
@@ -447,9 +462,10 @@ Identities.prototype = {
             if (value == "SimpleUsers" || value === "") {
                 this.simpleuser_mode();
             } else {
-                this.normal_mode();
+                this.normal_mode(value);
             }
         }, this));
+        this.toggle_master_user($("#id_role").val());
         if (notrigger !== undefined && notrigger) {
             return;
         }

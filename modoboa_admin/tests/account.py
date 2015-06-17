@@ -71,6 +71,29 @@ class AccountTestCase(ModoTestCase):
         )
         self._set_quota("user@test2.com", 0)
 
+    def test_master_user(self):
+        """Validate the master user mode."""
+        values = {
+            "username": "masteruser", "role": "SuperAdmins",
+            "quota_act": False,
+            "is_active": True, "master_user": True, "stepid": "step2",
+            "password1": "toto", "password2": "toto"
+        }
+        self.ajax_post(
+            reverse("modoboa_admin:account_add"), values
+        )
+        self.assertTrue(User.objects.get(username="masteruser").master_user)
+
+        values = {
+            "username": "testuser", "role": "DomainAdmins",
+            "quota_act": False,
+            "is_active": True, "master_user": True, "stepid": "step2",
+            "password1": "toto", "password2": "toto"
+        }
+        self.ajax_post(
+            reverse("modoboa_admin:account_add"), values, status=400
+        )
+
 
 class PermissionsTestCase(ModoTestCase):
 
@@ -192,3 +215,16 @@ class PermissionsTestCase(ModoTestCase):
             enabled=True
         )
         self.ajax_post(reverse("modoboa_admin:dlist_add"), values)
+
+    def test_domainadmin_master_user(self):
+        """Check domain administrator is not allowed to access this feature."""
+        values = dict(
+            username="user10@test.com", first_name="Test",
+            last_name="Test", password1="toto", password2="toto",
+            role="SimpleUsers", is_active=True, master_user=True,
+            email="user10@test.com", stepid='step2'
+        )
+        self.ajax_post(
+            reverse("modoboa_admin:account_add"),
+            values, status=400
+        )
