@@ -60,14 +60,10 @@ def importdata(request, formclass=ImportDataForm):
                         except Conflict:
                             if form.cleaned_data["continue_if_exists"]:
                                 continue
-                            transaction.rollback()
                             raise Conflict(
                                 _("Object already exists: %s"
                                   % form.cleaned_data['sepchar'].join(row[:2]))
                             )
-                        except ModoboaException:
-                            transaction.rollback()
-                            raise
                     cpt += 1
                 msg = _("%d objects imported successfully" % cpt)
                 return render(request, "modoboa_admin/import_done.html", {
