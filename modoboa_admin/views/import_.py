@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import (
     login_required, permission_required, user_passes_test
 )
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
@@ -53,15 +54,20 @@ def importdata(request, formclass=ImportDataForm):
                         if not fct:
                             continue
                         fct = fct[0]
-                    try:
-                        fct(request.user, row, form.cleaned_data)
-                    except Conflict:
-                        if form.cleaned_data["continue_if_exists"]:
-                            continue
-                        raise Conflict(
-                            _("Object already exists: %s"
-                              % form.cleaned_data['sepchar'].join(row[:2]))
-                        )
+                    with transaction.atomic():
+                        try:
+                            fct(request.user, row, form.cleaned_data)
+                        except Conflict:
+                            if form.cleaned_data["continue_if_exists"]:
+                                continue
+                            transaction.rollback()
+                            raise Conflict(
+                                _("Object already exists: %s"
+                                  % form.cleaned_data['sepchar'].join(row[:2]))
+                            )
+                        except ModoboaException:
+                            transaction.rollback()
+                            raise
                     cpt += 1
                 msg = _("%d objects imported successfully" % cpt)
                 return render(request, "modoboa_admin/import_done.html", {

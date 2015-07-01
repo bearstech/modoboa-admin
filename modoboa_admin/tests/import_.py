@@ -105,6 +105,18 @@ dlist; dlist@test.com; True; user1@test.com; user@extdomain.com
         self.assertIn("user@extdomain.com", dlist.extmboxes)
         self.assertTrue(admin.is_owner(dlist))
 
+    def test_import_for_nonlocal_domain(self):
+        """Try to import an account for nonlocal domain."""
+        f = ContentFile(b"""
+account; user1@nonlocal.com; toto; User; One; True; SimpleUsers; user1@nonlocal.com; 0
+""", name="identities.csv")
+        self.clt.post(
+            reverse("modoboa_admin:identity_import"),
+            {"sourcefile": f, "crypt_password": True}
+        )
+        self.assertFalse(
+            User.objects.filter(username="user1@nonlocal.com").exists())
+
     def test_import_invalid_quota(self):
         f = ContentFile(b"""
 account; user1@test.com; toto; User; One; True; SimpleUsers; user1@test.com; ; test.com
