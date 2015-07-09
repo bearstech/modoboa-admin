@@ -24,7 +24,6 @@ ADMIN_EVENTS = [
     "ExtraDomainQsetFilters",
     "ExtraDomainTypes",
     "ExtraDomainWizardSteps",
-    "GetDomainActions",
     "GetDomainModifyLink",
     "CheckDomainName",
 

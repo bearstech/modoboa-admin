@@ -11,6 +11,8 @@ from modoboa.lib import events
 from modoboa.lib.templatetags.lib_tags import render_link
 from modoboa.lib.web_utils import render_actions
 
+from .. import signals
+
 register = template.Library()
 
 genders = {
@@ -19,7 +21,7 @@ genders = {
 
 
 @register.simple_tag
-def domains_menu(selection, user):
+def domains_menu(selection, user, ajax_mode=True):
     """Specific menu for domain related operations.
 
     Corresponds to the menu visible on the left column when you go to
@@ -31,8 +33,7 @@ def domains_menu(selection, user):
     :return: rendered menu (as HTML)
     """
     domain_list_url = (
-        "list/" if selection != "statistics"
-        else reverse("modoboa_admin:domain_list")
+        "list/" if ajax_mode else reverse("modoboa_admin:domain_list")
     )
     entries = [
         {"name": "domains",
@@ -144,24 +145,26 @@ def identities_menu(user, selection=None):
 
 @register.simple_tag
 def domain_actions(user, domain):
-    actions = []
-    if domain.__class__.__name__ == 'Domain':
-        actions = [
-            {"name": "listidentities",
-             "url": "{0}#list/?searchquery=@{1}".format(
-                 reverse("modoboa_admin:identity_list"), domain.name),
-             "title": _("View the domain's identities"),
-             "img": "fa fa-user"}
-        ]
-        if user.has_perm("modoboa_admin.delete_domain"):
-            actions.append({
-                "name": "deldomain",
-                "url": reverse("modoboa_admin:domain_delete", args=[domain.id]),
-                "title": _("Delete %s?" % domain.name),
-                "img": "fa fa-trash"
-            })
-    else:
-        actions = events.raiseQueryEvent('GetDomainActions', user, domain)
+    actions = [
+        {"name": "listidentities",
+         "url": "{0}#list/?searchquery=@{1}".format(
+             reverse("modoboa_admin:identity_list"), domain.name),
+         "title": _("View the domain's identities"),
+         "img": "fa fa-user"}
+    ]
+    if user.has_perm("modoboa_admin.delete_domain"):
+        actions.append({
+            "name": "deldomain",
+            "url": reverse("modoboa_admin:domain_delete", args=[domain.id]),
+            "title": _("Delete %s?" % domain.name),
+            "img": "fa fa-trash"
+        })
+
+    responses = signals.extra_domain_actions.send(
+        sender=None, user=user, domain=domain)
+    for receiver, response in responses:
+        if response:
+            actions += response
 
     return render_actions(actions)
 

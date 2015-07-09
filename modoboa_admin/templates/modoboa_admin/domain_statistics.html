@@ -5,7 +5,7 @@
 
 {% block leftcol %}
 <ul class="nav nav-sidebar">
-  {% domains_menu "statistics" user %}
+  {% domains_menu "statistics" user False %}
 </ul>
 
 {% get_extra_admin_content user "leftcol" selection %}
