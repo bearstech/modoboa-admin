@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-08 14:19+0200\n"
+"POT-Creation-Date: 2015-07-09 10:32+0200\n"
 "PO-Revision-Date: 2013-10-01 09:56+0000\n"
 "Last-Translator: Pedro Gracia <lasarux@neuroomante.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/modoboa/language/"
@@ -73,66 +73,70 @@ msgstr "Dominio creado"
 msgid "Create a domain and a mailbox when an account is automatically created."
 msgstr ""
 
-#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:234 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr ""
 
-#: forms/account.py:25 templates/modoboa_admin/editdomainform.html:13
+#: forms/account.py:28 templates/modoboa_admin/editdomainform.html:13
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: forms/account.py:27
+#: forms/account.py:30
 #, fuzzy
 msgid ""
 "The user's name. Must be a valid e-mail address for simple users or "
 "administrators with a mailbox."
 msgstr "El usuario normal '%s' debe tener una dirección de email válida"
 
-#: forms/account.py:32
+#: forms/account.py:35
 msgid "Role"
 msgstr "Rol"
 
-#: forms/account.py:33 forms/account.py:67
+#: forms/account.py:36 forms/account.py:73
 msgid "Choose"
 msgstr "Elija"
 
-#: forms/account.py:34
+#: forms/account.py:37
 msgid "What level of permission this user will have"
 msgstr "Qué nivel de permiso tendrá este usuario"
 
-#: forms/account.py:37
+#: forms/account.py:40
 msgid "Password"
 msgstr "Contraseña"
 
-#: forms/account.py:40
+#: forms/account.py:43
 msgid "Confirmation"
 msgstr "Confirmación"
 
-#: forms/account.py:43
+#: forms/account.py:46
 msgid "Enter the same password as above, for verification."
 msgstr "Introduzca la misma contraseña que arriba, para verificación."
 
-#: forms/account.py:58
+#: forms/account.py:64
 msgid "Enabled"
 msgstr "Activado"
 
-#: forms/account.py:125
+#: forms/account.py:137
+msgid "Only super administrators are allowed for this mode"
+msgstr ""
+
+#: forms/account.py:146
 msgid "The two password fields didn't match."
 msgstr "Las contraseñas no concuerdan"
 
-#: forms/account.py:131
+#: forms/account.py:152
 msgid "You can't disable your own account"
 msgstr "No puede deshabilitar su propia cuenta"
 
-#: forms/account.py:145
+#: forms/account.py:166
 msgid "E-mail"
 msgstr "Email"
 
-#: forms/account.py:147 forms/domain.py:35
+#: forms/account.py:168 forms/domain.py:35
 msgid "Quota"
 msgstr "Cuota"
 
-#: forms/account.py:149
+#: forms/account.py:170
 msgid ""
 "Quota in MB for this mailbox. Define a custom value or use domain's default "
 "one. Leave empty to define an unlimited value (not allowed for domain "
@@ -142,12 +146,12 @@ msgstr ""
 "dominio por defecto. Déjelo vacío para definir un valor ilimitado (no "
 "permitido para los administradores del dominio)"
 
-#: forms/account.py:157 forms/domain.py:43
+#: forms/account.py:178 forms/domain.py:43
 #: templates/modoboa_admin/domains.html:26
 msgid "Alias(es)"
 msgstr "Alias"
 
-#: forms/account.py:160
+#: forms/account.py:181
 msgid ""
 "Alias(es) of this mailbox. Indicate only one address per input, press ENTER "
 "to add a new input. Use the '*' character to create a 'catchall' alias (ex: "
@@ -157,45 +161,45 @@ msgstr ""
 "ENTER para añadir una nueva entrada. Use el carácter '*' para crear una "
 "dirección 'catchall' (recogerlos todos, ej. *@domain.tld)"
 
-#: forms/account.py:222 forms/account.py:253 forms/alias.py:83
+#: forms/account.py:243 forms/account.py:274 forms/alias.py:83
 msgid "Domain does not exist"
 msgstr "El dominio no existe"
 
-#: forms/account.py:231 modo_extension.py:226
+#: forms/account.py:252 modo_extension.py:226
 #, python-format
 msgid "Mailbox %s already exists"
 msgstr "El mailbox %s ya existe"
 
-#: forms/account.py:327
+#: forms/account.py:348
 msgid "Domain(s)"
 msgstr "Dominio(s)"
 
-#: forms/account.py:329
+#: forms/account.py:350
 msgid "Domain(s) that user administrates"
 msgstr "Dominio(s) que el usuario administra"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/account.py:394 forms/account.py:480 forms/domain.py:292
 #: forms/domain.py:362
 msgid "General"
 msgstr "General"
 
-#: forms/account.py:378 forms/account.py:465
+#: forms/account.py:399 forms/account.py:486
 msgid "Mail"
 msgstr "Correo"
 
-#: forms/account.py:381
+#: forms/account.py:402
 msgid "Permissions"
 msgstr "Permisos"
 
-#: forms/account.py:448
+#: forms/account.py:469
 msgid "Account updated"
 msgstr "Cuenta actualizada"
 
-#: forms/account.py:472
+#: forms/account.py:493
 msgid "New account"
 msgstr "Nueva cuenta"
 
-#: forms/account.py:484
+#: forms/account.py:505
 msgid "Account created"
 msgstr "Cuenta creada"
 
@@ -227,28 +231,28 @@ msgstr ""
 msgid "You don't have access to this domain"
 msgstr "No tienes acceso a este dominio"
 
-#: forms/alias.py:108
+#: forms/alias.py:109
 msgid "Invalid mailbox"
 msgstr "mailbox inválido"
 
-#: forms/alias.py:138
+#: forms/alias.py:132
 #, fuzzy
 #| msgid "Local recipient %s not found"
 msgid "Local recipient {}@{} not found"
 msgstr "Destinatario local %s no encontrado"
 
-#: forms/alias.py:144
+#: forms/alias.py:138
 #, fuzzy
 #| msgid "Recipient %s already present"
 msgid "Recipient {} already present"
 msgstr "EL destinatario %s ya existe"
 
-#: forms/alias.py:152
+#: forms/alias.py:146
 #, python-format
 msgid "Recipient %s already present"
 msgstr "EL destinatario %s ya existe"
 
-#: forms/alias.py:158
+#: forms/alias.py:152
 msgid "No recipient defined"
 msgstr "No ha puesto destinatario"
 
@@ -406,6 +410,16 @@ msgstr ""
 msgid "A mailbox is required"
 msgstr "Una cuota es obligatoria"
 
+#: lib.py:126
+#, fuzzy
+#| msgid "You can't delete your own domain"
+msgid "You are not allowed to import domains"
+msgstr "No puedo eliminar su propio dominio"
+
+#: lib.py:135
+msgid "You are not allowed to import domain aliases."
+msgstr ""
+
 #: models/alias.py:24 models/mailbox.py:80
 msgid "address"
 msgstr "dirección"
@@ -460,7 +474,7 @@ msgstr "Línea inválida: %s"
 msgid "Domain '%s' does not exist"
 msgstr "El dominio '%s' no existe"
 
-#: models/alias.py:213
+#: models/alias.py:215
 #, python-format
 msgid "Local recipient %s not found"
 msgstr "Destinatario local %s no encontrado"
@@ -565,7 +579,7 @@ msgstr "Falló la importación de la cuenta (%s): el dominio no existe"
 msgid "Account import failed (%s): wrong quota value"
 msgstr "Falló la importación de la cuenta (%s): el dominio no existe"
 
-#: templates/modoboa_admin/account_general_form.html:9
+#: templates/modoboa_admin/account_general_form.html:11
 #: templates/modoboa_admin/aliasform.html:8
 #, fuzzy
 msgid "Domain is disabled"
@@ -583,7 +597,7 @@ msgid "You can't create a new domain administrator"
 msgstr "Crear un administrador del dominio"
 
 #: templates/modoboa_admin/domain_statistics.html:15
-#: templatetags/admin_tags.py:44
+#: templatetags/admin_tags.py:45
 msgid "Statistics"
 msgstr "Estadísticas"
 
@@ -698,68 +712,68 @@ msgstr "Uso (%%)"
 msgid "Search"
 msgstr "Buscar"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_m"
 msgstr "Activado"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_f"
 msgstr "Activado"
 
-#: templatetags/admin_tags.py:39
+#: templatetags/admin_tags.py:40
 #, fuzzy
 msgid "List domains"
 msgstr "Editar el dominio"
 
-#: templatetags/admin_tags.py:52
+#: templatetags/admin_tags.py:53
 msgid "Add domain"
 msgstr "Añadir dominio"
 
-#: templatetags/admin_tags.py:61 templatetags/admin_tags.py:125
-#: views/import.py:53 views/import.py:168
+#: templatetags/admin_tags.py:62 templatetags/admin_tags.py:126
+#: views/import_.py:99 views/import_.py:133
 msgid "Import"
 msgstr "Importar"
 
-#: templatetags/admin_tags.py:67 templatetags/admin_tags.py:131
+#: templatetags/admin_tags.py:68 templatetags/admin_tags.py:132
 #: views/export.py:41 views/export.py:69
 msgid "Export"
 msgstr "Exportar"
 
-#: templatetags/admin_tags.py:91
+#: templatetags/admin_tags.py:92
 msgid "List identities"
 msgstr "Listar identidades"
 
-#: templatetags/admin_tags.py:96
+#: templatetags/admin_tags.py:97
 msgid "List quotas"
 msgstr "Listar cuotas"
 
-#: templatetags/admin_tags.py:101
+#: templatetags/admin_tags.py:102
 msgid "Add account"
 msgstr "Añadir cuenta"
 
-#: templatetags/admin_tags.py:107
+#: templatetags/admin_tags.py:108
 msgid "Add alias"
 msgstr "Añadir alias"
 
-#: templatetags/admin_tags.py:113
+#: templatetags/admin_tags.py:114
 msgid "Add forward"
 msgstr "Añadir reenvío"
 
-#: templatetags/admin_tags.py:119
+#: templatetags/admin_tags.py:120
 msgid "Add distribution list"
 msgstr "Añadir lista de distribución"
 
-#: templatetags/admin_tags.py:153
+#: templatetags/admin_tags.py:152
 msgid "View the domain's identities"
 msgstr "Ver las identidades del dominio"
 
-#: templatetags/admin_tags.py:160 templatetags/admin_tags.py:179
-#: templatetags/admin_tags.py:186
+#: templatetags/admin_tags.py:159 templatetags/admin_tags.py:182
+#: templatetags/admin_tags.py:189
 #, python-format
 msgid "Delete %s?"
 msgstr "¿Eliminar %s?"
 
-#: templatetags/admin_tags.py:262
+#: templatetags/admin_tags.py:265
 msgid "Remove this permission"
 msgstr "Eliminar este permiso"
 
@@ -835,7 +849,17 @@ msgid_plural "Accounts deleted"
 msgstr[0] "Cuenta eliminada"
 msgstr[1] "Cuentas eliminadas"
 
-#: views/import.py:40
+#: views/import_.py:64
+#, python-format
+msgid "Object already exists: %s"
+msgstr "El objeto ya existe: %s"
+
+#: views/import_.py:68
+#, python-format
+msgid "%d objects imported successfully"
+msgstr "%d objetos importados con éxito"
+
+#: views/import_.py:86
 #, fuzzy, python-format
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
@@ -855,21 +879,11 @@ msgstr ""
 "uno de los valores anteriores.</p>⏎ <p>Puede usar un carácter diferente como "
 "separador.</p>⏎\n"
 
-#: views/import.py:52
+#: views/import_.py:98
 msgid "Import domains"
 msgstr "Importar dominios"
 
-#: views/import.py:130
-#, python-format
-msgid "Object already exists: %s"
-msgstr "El objeto ya existe: %s"
-
-#: views/import.py:134
-#, python-format
-msgid "%d objects imported successfully"
-msgstr "%d objetos importados con éxito"
-
-#: views/import.py:155
+#: views/import_.py:120
 #, fuzzy
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
@@ -899,7 +913,7 @@ msgstr ""
 "\n"
 "<p>Puede usar un carácter diferente como separador.</p>\n"
 
-#: views/import.py:167
+#: views/import_.py:132
 msgid "Import identities"
 msgstr "Importar identidades"
 

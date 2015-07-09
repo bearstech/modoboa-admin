@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-08 14:19+0200\n"
+"POT-Creation-Date: 2015-07-09 10:32+0200\n"
 "PO-Revision-Date: 2013-12-03 09:35+0000\n"
 "Last-Translator: Antoine Nguyen <tonio@ngyn.org>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/modoboa/language/"
@@ -71,65 +71,69 @@ msgstr "Домен создан"
 msgid "Create a domain and a mailbox when an account is automatically created."
 msgstr ""
 
-#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:234 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr ""
 
-#: forms/account.py:25 templates/modoboa_admin/editdomainform.html:13
+#: forms/account.py:28 templates/modoboa_admin/editdomainform.html:13
 msgid "Username"
 msgstr "Логин пользователя"
 
-#: forms/account.py:27
+#: forms/account.py:30
 msgid ""
 "The user's name. Must be a valid e-mail address for simple users or "
 "administrators with a mailbox."
 msgstr ""
 
-#: forms/account.py:32
+#: forms/account.py:35
 msgid "Role"
 msgstr "Роль"
 
-#: forms/account.py:33 forms/account.py:67
+#: forms/account.py:36 forms/account.py:73
 msgid "Choose"
 msgstr "Выбрать"
 
-#: forms/account.py:34
+#: forms/account.py:37
 msgid "What level of permission this user will have"
 msgstr "Разрешения для этого пользователя"
 
-#: forms/account.py:37
+#: forms/account.py:40
 msgid "Password"
 msgstr "Пароль"
 
-#: forms/account.py:40
+#: forms/account.py:43
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: forms/account.py:43
+#: forms/account.py:46
 msgid "Enter the same password as above, for verification."
 msgstr "Введите такой же пароль как выше. Для проверки."
 
-#: forms/account.py:58
+#: forms/account.py:64
 msgid "Enabled"
 msgstr "Разрешено"
 
-#: forms/account.py:125
+#: forms/account.py:137
+msgid "Only super administrators are allowed for this mode"
+msgstr ""
+
+#: forms/account.py:146
 msgid "The two password fields didn't match."
 msgstr "Пароли не совпадают"
 
-#: forms/account.py:131
+#: forms/account.py:152
 msgid "You can't disable your own account"
 msgstr "Вы не можете запретить собственный аккаунт"
 
-#: forms/account.py:145
+#: forms/account.py:166
 msgid "E-mail"
 msgstr "Е-майл"
 
-#: forms/account.py:147 forms/domain.py:35
+#: forms/account.py:168 forms/domain.py:35
 msgid "Quota"
 msgstr "Квота"
 
-#: forms/account.py:149
+#: forms/account.py:170
 msgid ""
 "Quota in MB for this mailbox. Define a custom value or use domain's default "
 "one. Leave empty to define an unlimited value (not allowed for domain "
@@ -140,12 +144,12 @@ msgstr ""
 "Оставьте пустым для неограниченного значения.  (Не разрешено администраторам "
 "домена)"
 
-#: forms/account.py:157 forms/domain.py:43
+#: forms/account.py:178 forms/domain.py:43
 #: templates/modoboa_admin/domains.html:26
 msgid "Alias(es)"
 msgstr "Синоним(ы)"
 
-#: forms/account.py:160
+#: forms/account.py:181
 msgid ""
 "Alias(es) of this mailbox. Indicate only one address per input, press ENTER "
 "to add a new input. Use the '*' character to create a 'catchall' alias (ex: "
@@ -154,45 +158,45 @@ msgstr ""
 "Синонимы этого почтового ящика. Вводите один адрес за раз. Нажмите ENTER для "
 "добавления. Используйте '*' для создания синонима 'для всех' (*@domain.tld)"
 
-#: forms/account.py:222 forms/account.py:253 forms/alias.py:83
+#: forms/account.py:243 forms/account.py:274 forms/alias.py:83
 msgid "Domain does not exist"
 msgstr "Домен не существует"
 
-#: forms/account.py:231 modo_extension.py:226
+#: forms/account.py:252 modo_extension.py:226
 #, python-format
 msgid "Mailbox %s already exists"
 msgstr "Почтовый ящик %s существует"
 
-#: forms/account.py:327
+#: forms/account.py:348
 msgid "Domain(s)"
 msgstr "Домен(ы)"
 
-#: forms/account.py:329
+#: forms/account.py:350
 msgid "Domain(s) that user administrates"
 msgstr "Домен(ы) администрируемые пользователем"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/account.py:394 forms/account.py:480 forms/domain.py:292
 #: forms/domain.py:362
 msgid "General"
 msgstr "Основные"
 
-#: forms/account.py:378 forms/account.py:465
+#: forms/account.py:399 forms/account.py:486
 msgid "Mail"
 msgstr "Почта"
 
-#: forms/account.py:381
+#: forms/account.py:402
 msgid "Permissions"
 msgstr "Права"
 
-#: forms/account.py:448
+#: forms/account.py:469
 msgid "Account updated"
 msgstr "аккаунт изменен"
 
-#: forms/account.py:472
+#: forms/account.py:493
 msgid "New account"
 msgstr "Новый аккаунт"
 
-#: forms/account.py:484
+#: forms/account.py:505
 msgid "Account created"
 msgstr "Аккаунт создан"
 
@@ -224,28 +228,28 @@ msgstr ""
 msgid "You don't have access to this domain"
 msgstr "Вы не имеете права доступа к этому домену"
 
-#: forms/alias.py:108
+#: forms/alias.py:109
 msgid "Invalid mailbox"
 msgstr "Неверный почтовый ящик"
 
-#: forms/alias.py:138
+#: forms/alias.py:132
 #, fuzzy
 #| msgid "Local recipient %s not found"
 msgid "Local recipient {}@{} not found"
 msgstr "Локальный получатель  %s не найден"
 
-#: forms/alias.py:144
+#: forms/alias.py:138
 #, fuzzy
 #| msgid "Recipient %s already present"
 msgid "Recipient {} already present"
 msgstr "Получатель %s уже присутвует"
 
-#: forms/alias.py:152
+#: forms/alias.py:146
 #, python-format
 msgid "Recipient %s already present"
 msgstr "Получатель %s уже присутвует"
 
-#: forms/alias.py:158
+#: forms/alias.py:152
 msgid "No recipient defined"
 msgstr "Получатель не определен"
 
@@ -398,6 +402,16 @@ msgstr "Выберите эту опцию если пароль в вашем �
 msgid "A mailbox is required"
 msgstr ""
 
+#: lib.py:126
+#, fuzzy
+#| msgid "You can't delete your own domain"
+msgid "You are not allowed to import domains"
+msgstr "Вы не можете удалить собственный домен"
+
+#: lib.py:135
+msgid "You are not allowed to import domain aliases."
+msgstr ""
+
 #: models/alias.py:24 models/mailbox.py:80
 msgid "address"
 msgstr "адрес"
@@ -452,7 +466,7 @@ msgstr "Неверная строка %s"
 msgid "Domain '%s' does not exist"
 msgstr "Домен '%s' не существует"
 
-#: models/alias.py:213
+#: models/alias.py:215
 #, python-format
 msgid "Local recipient %s not found"
 msgstr "Локальный получатель  %s не найден"
@@ -556,7 +570,7 @@ msgstr "Ошибка импорта аккаунта (%s): домен долже
 msgid "Account import failed (%s): wrong quota value"
 msgstr "Ошибка импорта аккаунта (%s): домен должен существовать "
 
-#: templates/modoboa_admin/account_general_form.html:9
+#: templates/modoboa_admin/account_general_form.html:11
 #: templates/modoboa_admin/aliasform.html:8
 #, fuzzy
 msgid "Domain is disabled"
@@ -573,7 +587,7 @@ msgid "You can't create a new domain administrator"
 msgstr ""
 
 #: templates/modoboa_admin/domain_statistics.html:15
-#: templatetags/admin_tags.py:44
+#: templatetags/admin_tags.py:45
 msgid "Statistics"
 msgstr "Статистика"
 
@@ -688,68 +702,68 @@ msgstr "использование (%%)"
 msgid "Search"
 msgstr "Поиск"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_m"
 msgstr "enabled_m"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_f"
 msgstr "enabled_f"
 
-#: templatetags/admin_tags.py:39
+#: templatetags/admin_tags.py:40
 #, fuzzy
 msgid "List domains"
 msgstr "Список квот"
 
-#: templatetags/admin_tags.py:52
+#: templatetags/admin_tags.py:53
 msgid "Add domain"
 msgstr "Добавить домен"
 
-#: templatetags/admin_tags.py:61 templatetags/admin_tags.py:125
-#: views/import.py:53 views/import.py:168
+#: templatetags/admin_tags.py:62 templatetags/admin_tags.py:126
+#: views/import_.py:99 views/import_.py:133
 msgid "Import"
 msgstr "Импорт"
 
-#: templatetags/admin_tags.py:67 templatetags/admin_tags.py:131
+#: templatetags/admin_tags.py:68 templatetags/admin_tags.py:132
 #: views/export.py:41 views/export.py:69
 msgid "Export"
 msgstr "Экспорт"
 
-#: templatetags/admin_tags.py:91
+#: templatetags/admin_tags.py:92
 msgid "List identities"
 msgstr "Список пользователей"
 
-#: templatetags/admin_tags.py:96
+#: templatetags/admin_tags.py:97
 msgid "List quotas"
 msgstr "Список квот"
 
-#: templatetags/admin_tags.py:101
+#: templatetags/admin_tags.py:102
 msgid "Add account"
 msgstr "Добавить аккаунт"
 
-#: templatetags/admin_tags.py:107
+#: templatetags/admin_tags.py:108
 msgid "Add alias"
 msgstr "Добавить синоним"
 
-#: templatetags/admin_tags.py:113
+#: templatetags/admin_tags.py:114
 msgid "Add forward"
 msgstr "Добавить пересылку"
 
-#: templatetags/admin_tags.py:119
+#: templatetags/admin_tags.py:120
 msgid "Add distribution list"
 msgstr "Добавить список рассылки"
 
-#: templatetags/admin_tags.py:153
+#: templatetags/admin_tags.py:152
 msgid "View the domain's identities"
 msgstr "Информация о домене"
 
-#: templatetags/admin_tags.py:160 templatetags/admin_tags.py:179
-#: templatetags/admin_tags.py:186
+#: templatetags/admin_tags.py:159 templatetags/admin_tags.py:182
+#: templatetags/admin_tags.py:189
 #, python-format
 msgid "Delete %s?"
 msgstr "Удалить %s?"
 
-#: templatetags/admin_tags.py:262
+#: templatetags/admin_tags.py:265
 msgid "Remove this permission"
 msgstr "Удалить это разрешение"
 
@@ -827,7 +841,17 @@ msgstr[0] "Аккаунт удален"
 msgstr[1] "Аккаунта удалено"
 msgstr[2] "Аккаунтов удалено"
 
-#: views/import.py:40
+#: views/import_.py:64
+#, python-format
+msgid "Object already exists: %s"
+msgstr "Объект уже существует: %s"
+
+#: views/import_.py:68
+#, python-format
+msgid "%d objects imported successfully"
+msgstr "%d объектов импортировано"
+
+#: views/import_.py:86
 #, python-format
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
@@ -841,21 +865,11 @@ msgid ""
 "<p>You can use a different character as separator.</p>\n"
 msgstr ""
 
-#: views/import.py:52
+#: views/import_.py:98
 msgid "Import domains"
 msgstr "Импорт доменов"
 
-#: views/import.py:130
-#, python-format
-msgid "Object already exists: %s"
-msgstr "Объект уже существует: %s"
-
-#: views/import.py:134
-#, python-format
-msgid "%d objects imported successfully"
-msgstr "%d объектов импортировано"
-
-#: views/import.py:155
+#: views/import_.py:120
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
 "<ul>\n"
@@ -871,7 +885,7 @@ msgid ""
 "<p>You can use a different character as separator.</p>\n"
 msgstr ""
 
-#: views/import.py:167
+#: views/import_.py:132
 msgid "Import identities"
 msgstr "Импорт информации о пользователях"
 

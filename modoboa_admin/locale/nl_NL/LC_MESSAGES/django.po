@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-08 14:19+0200\n"
+"POT-Creation-Date: 2015-07-09 10:32+0200\n"
 "PO-Revision-Date: 2014-12-31 11:37+0000\n"
 "Last-Translator: TuxBrother <vrijwilligerswerk@wij.rs>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/projects/p/"
@@ -75,15 +75,15 @@ msgid "Create a domain and a mailbox when an account is automatically created."
 msgstr ""
 "Maak een domein en mailbox aan wanneer een account automatisch is aangemaakt."
 
-#: app_settings.py:100 forms/account.py:213 forms/domain.py:77
+#: app_settings.py:100 forms/account.py:234 forms/domain.py:77
 msgid "Must be a positive integer"
 msgstr "Dit moet een positive integer zijn."
 
-#: forms/account.py:25 templates/modoboa_admin/editdomainform.html:13
+#: forms/account.py:28 templates/modoboa_admin/editdomainform.html:13
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: forms/account.py:27
+#: forms/account.py:30
 msgid ""
 "The user's name. Must be a valid e-mail address for simple users or "
 "administrators with a mailbox."
@@ -91,51 +91,55 @@ msgstr ""
 "De naam van de gebruiker. Moet een geldig e-mail adres zijn voor gebruikers "
 "of administrators met een mailbox."
 
-#: forms/account.py:32
+#: forms/account.py:35
 msgid "Role"
 msgstr "Regel"
 
-#: forms/account.py:33 forms/account.py:67
+#: forms/account.py:36 forms/account.py:73
 msgid "Choose"
 msgstr "Kiezen"
 
-#: forms/account.py:34
+#: forms/account.py:37
 msgid "What level of permission this user will have"
 msgstr "Welk niveau van rechten deze gebruiker zal hebben"
 
-#: forms/account.py:37
+#: forms/account.py:40
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: forms/account.py:40
+#: forms/account.py:43
 msgid "Confirmation"
 msgstr "Bevestiging"
 
-#: forms/account.py:43
+#: forms/account.py:46
 msgid "Enter the same password as above, for verification."
 msgstr "Herhaal wachtwoord (voor verificatie)"
 
-#: forms/account.py:58
+#: forms/account.py:64
 msgid "Enabled"
 msgstr "Actief"
 
-#: forms/account.py:125
+#: forms/account.py:137
+msgid "Only super administrators are allowed for this mode"
+msgstr ""
+
+#: forms/account.py:146
 msgid "The two password fields didn't match."
 msgstr "De wachtwoorden komen niet overeen."
 
-#: forms/account.py:131
+#: forms/account.py:152
 msgid "You can't disable your own account"
 msgstr "U kunt uw eigen account niet uitschakelen"
 
-#: forms/account.py:145
+#: forms/account.py:166
 msgid "E-mail"
 msgstr "E-mail"
 
-#: forms/account.py:147 forms/domain.py:35
+#: forms/account.py:168 forms/domain.py:35
 msgid "Quota"
 msgstr "Quota"
 
-#: forms/account.py:149
+#: forms/account.py:170
 msgid ""
 "Quota in MB for this mailbox. Define a custom value or use domain's default "
 "one. Leave empty to define an unlimited value (not allowed for domain "
@@ -145,12 +149,12 @@ msgstr ""
 "stanaard waarde van het domein. Laat leeg om een ongelimiteerde waarde te "
 "definieren (niet toegestaan voor domein administrators)."
 
-#: forms/account.py:157 forms/domain.py:43
+#: forms/account.py:178 forms/domain.py:43
 #: templates/modoboa_admin/domains.html:26
 msgid "Alias(es)"
 msgstr "Alias(sen)"
 
-#: forms/account.py:160
+#: forms/account.py:181
 msgid ""
 "Alias(es) of this mailbox. Indicate only one address per input, press ENTER "
 "to add a new input. Use the '*' character to create a 'catchall' alias (ex: "
@@ -160,45 +164,45 @@ msgstr ""
 "ENTER om een nieuwe regel te krijgen. Gebruik een wildcard '*' om een 'catch-"
 "all' adres te maken (bijvoorbeeld: *@domein.tld)."
 
-#: forms/account.py:222 forms/account.py:253 forms/alias.py:83
+#: forms/account.py:243 forms/account.py:274 forms/alias.py:83
 msgid "Domain does not exist"
 msgstr "Domein bestaat niet"
 
-#: forms/account.py:231 modo_extension.py:226
+#: forms/account.py:252 modo_extension.py:226
 #, python-format
 msgid "Mailbox %s already exists"
 msgstr "Mailbox %s bestaat al"
 
-#: forms/account.py:327
+#: forms/account.py:348
 msgid "Domain(s)"
 msgstr "Domein(en)"
 
-#: forms/account.py:329
+#: forms/account.py:350
 msgid "Domain(s) that user administrates"
 msgstr "Domein(en) die gebruiker mag beheren"
 
-#: forms/account.py:373 forms/account.py:459 forms/domain.py:292
+#: forms/account.py:394 forms/account.py:480 forms/domain.py:292
 #: forms/domain.py:362
 msgid "General"
 msgstr "Algemeen"
 
-#: forms/account.py:378 forms/account.py:465
+#: forms/account.py:399 forms/account.py:486
 msgid "Mail"
 msgstr "Mail"
 
-#: forms/account.py:381
+#: forms/account.py:402
 msgid "Permissions"
 msgstr "Rechten"
 
-#: forms/account.py:448
+#: forms/account.py:469
 msgid "Account updated"
 msgstr "Account aangepast"
 
-#: forms/account.py:472
+#: forms/account.py:493
 msgid "New account"
 msgstr "Nieuwe account"
 
-#: forms/account.py:484
+#: forms/account.py:505
 msgid "Account created"
 msgstr "Account aangemaakt"
 
@@ -230,28 +234,28 @@ msgstr ""
 msgid "You don't have access to this domain"
 msgstr "U heeft geen toegang tot dit domein"
 
-#: forms/alias.py:108
+#: forms/alias.py:109
 msgid "Invalid mailbox"
 msgstr "Verkeerde mailbox"
 
-#: forms/alias.py:138
+#: forms/alias.py:132
 #, fuzzy
 #| msgid "Local recipient %s not found"
 msgid "Local recipient {}@{} not found"
 msgstr "Lokale ontvanger %s niet gevonden"
 
-#: forms/alias.py:144
+#: forms/alias.py:138
 #, fuzzy
 #| msgid "Recipient %s already present"
 msgid "Recipient {} already present"
 msgstr "Ontvanger %s is al aanwezig"
 
-#: forms/alias.py:152
+#: forms/alias.py:146
 #, python-format
 msgid "Recipient %s already present"
 msgstr "Ontvanger %s is al aanwezig"
 
-#: forms/alias.py:158
+#: forms/alias.py:152
 msgid "No recipient defined"
 msgstr "Geen ontvanger opgegeven"
 
@@ -404,6 +408,16 @@ msgstr ""
 msgid "A mailbox is required"
 msgstr "Een mailbox is benodigd"
 
+#: lib.py:126
+#, fuzzy
+#| msgid "You can't delete your own domain"
+msgid "You are not allowed to import domains"
+msgstr "U kunt uw eigen domein niet verwijderen"
+
+#: lib.py:135
+msgid "You are not allowed to import domain aliases."
+msgstr ""
+
 #: models/alias.py:24 models/mailbox.py:80
 msgid "address"
 msgstr "adres"
@@ -458,7 +472,7 @@ msgstr "Ongeldige regel: %s"
 msgid "Domain '%s' does not exist"
 msgstr "Domein '%s' bestaat niet"
 
-#: models/alias.py:213
+#: models/alias.py:215
 #, python-format
 msgid "Local recipient %s not found"
 msgstr "Lokale ontvanger %s niet gevonden"
@@ -562,7 +576,7 @@ msgstr "Accounts importeren mislukt (%s): domein bestaat niet"
 msgid "Account import failed (%s): wrong quota value"
 msgstr "Account import is mislukt (%s): verkeerd quotum waarde"
 
-#: templates/modoboa_admin/account_general_form.html:9
+#: templates/modoboa_admin/account_general_form.html:11
 #: templates/modoboa_admin/aliasform.html:8
 msgid "Domain is disabled"
 msgstr "Domein is gedeactiveerd"
@@ -578,7 +592,7 @@ msgid "You can't create a new domain administrator"
 msgstr "U kunt geen nieuwe domein administrator aanmaken"
 
 #: templates/modoboa_admin/domain_statistics.html:15
-#: templatetags/admin_tags.py:44
+#: templatetags/admin_tags.py:45
 msgid "Statistics"
 msgstr "Statistieken"
 
@@ -690,67 +704,67 @@ msgstr "Gebruik (%%)"
 msgid "Search"
 msgstr "Zoeken"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_m"
 msgstr "geactiveerd_m"
 
-#: templatetags/admin_tags.py:17
+#: templatetags/admin_tags.py:19
 msgid "enabled_f"
 msgstr "geactiveerd_f"
 
-#: templatetags/admin_tags.py:39
+#: templatetags/admin_tags.py:40
 msgid "List domains"
 msgstr "Weergeef domeinen"
 
-#: templatetags/admin_tags.py:52
+#: templatetags/admin_tags.py:53
 msgid "Add domain"
 msgstr "Domein toevoegen"
 
-#: templatetags/admin_tags.py:61 templatetags/admin_tags.py:125
-#: views/import.py:53 views/import.py:168
+#: templatetags/admin_tags.py:62 templatetags/admin_tags.py:126
+#: views/import_.py:99 views/import_.py:133
 msgid "Import"
 msgstr "Importeren"
 
-#: templatetags/admin_tags.py:67 templatetags/admin_tags.py:131
+#: templatetags/admin_tags.py:68 templatetags/admin_tags.py:132
 #: views/export.py:41 views/export.py:69
 msgid "Export"
 msgstr "Exporteren"
 
-#: templatetags/admin_tags.py:91
+#: templatetags/admin_tags.py:92
 msgid "List identities"
 msgstr "Weergeef identiteiten"
 
-#: templatetags/admin_tags.py:96
+#: templatetags/admin_tags.py:97
 msgid "List quotas"
 msgstr "Weergeef quota's"
 
-#: templatetags/admin_tags.py:101
+#: templatetags/admin_tags.py:102
 msgid "Add account"
 msgstr "Account aanmaken"
 
-#: templatetags/admin_tags.py:107
+#: templatetags/admin_tags.py:108
 msgid "Add alias"
 msgstr "Alias toevoegen"
 
-#: templatetags/admin_tags.py:113
+#: templatetags/admin_tags.py:114
 msgid "Add forward"
 msgstr "Doorsuurregel toevoegen"
 
-#: templatetags/admin_tags.py:119
+#: templatetags/admin_tags.py:120
 msgid "Add distribution list"
 msgstr "Distributielijst toevoegen"
 
-#: templatetags/admin_tags.py:153
+#: templatetags/admin_tags.py:152
 msgid "View the domain's identities"
 msgstr "Weergeef de identiteiten van dit domein"
 
-#: templatetags/admin_tags.py:160 templatetags/admin_tags.py:179
-#: templatetags/admin_tags.py:186
+#: templatetags/admin_tags.py:159 templatetags/admin_tags.py:182
+#: templatetags/admin_tags.py:189
 #, python-format
 msgid "Delete %s?"
 msgstr "Verwijder %s?"
 
-#: templatetags/admin_tags.py:262
+#: templatetags/admin_tags.py:265
 msgid "Remove this permission"
 msgstr "Deze bevoegdheid verwijderen"
 
@@ -826,7 +840,17 @@ msgid_plural "Accounts deleted"
 msgstr[0] "Account verwijderd"
 msgstr[1] "Accounts verwijderd"
 
-#: views/import.py:40
+#: views/import_.py:64
+#, python-format
+msgid "Object already exists: %s"
+msgstr "Object bestaat al: %s"
+
+#: views/import_.py:68
+#, python-format
+msgid "%d objects imported successfully"
+msgstr "%d objecten successvol geimporteerd"
+
+#: views/import_.py:86
 #, python-format
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
@@ -853,21 +877,11 @@ msgstr ""
 "importeren mis</p>\n"
 "\n"
 
-#: views/import.py:52
+#: views/import_.py:98
 msgid "Import domains"
 msgstr "Importeer domeinen"
 
-#: views/import.py:130
-#, python-format
-msgid "Object already exists: %s"
-msgstr "Object bestaat al: %s"
-
-#: views/import.py:134
-#, python-format
-msgid "%d objects imported successfully"
-msgstr "%d objecten successvol geimporteerd"
-
-#: views/import.py:155
+#: views/import_.py:120
 msgid ""
 "Provide a CSV file where lines respect one of the following formats:\n"
 "<ul>\n"
@@ -897,7 +911,7 @@ msgstr ""
 "<p>Let op! Zorg dat het 'line-encoding format' Unix is - anders gaat het "
 "importeren mis</p>\n"
 
-#: views/import.py:167
+#: views/import_.py:132
 msgid "Import identities"
 msgstr "Identiteiten importeren"
 
