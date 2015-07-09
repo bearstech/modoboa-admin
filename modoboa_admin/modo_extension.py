@@ -74,7 +74,7 @@ PERMISSIONS = {
 class AdminConsole(ModoExtension):
     name = "modoboa_admin"
     label = ugettext_lazy("Administration console")
-    version = "1.1.0"
+    version = "1.1.1"
     description = ugettext_lazy(
         "Web based console to manage domains, accounts and aliases"
     )
@@ -130,7 +130,11 @@ def admin_menu(target, user):
              "url": reverse("modoboa_admin:domain_list"),
              "label": _("Domains")}
         ]
-    if user.has_perm("core.add_user") or user.has_perm("modoboa_admin.add_alias"):
+    conditions = (
+        user.has_perm("core.add_user"),
+        user.has_perm("modoboa_admin.add_alias")
+    )
+    if any(conditions):
         entries += [
             {"name": "identities",
              "url": reverse("modoboa_admin:identity_list"),
