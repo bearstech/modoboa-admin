@@ -19,7 +19,7 @@ class PasswordSchemesTestCase(ModoTestCase):
     def _create_account(self):
         values = dict(
             username="tester@test.com", first_name="Tester", last_name="Toto",
-            password1="toto", password2="toto", role="SimpleUsers",
+            password1="Toto1234", password2="Toto1234", role="SimpleUsers",
             quota_act=True,
             is_active=True, email="tester@test.com", stepid='step2'
         )
@@ -33,7 +33,7 @@ class PasswordSchemesTestCase(ModoTestCase):
         self._create_account()
         account = User.objects.get(username='tester@test.com')
         self.assertTrue(account.password.startswith(startpattern))
-        self.assertTrue(account.check_password('toto'))
+        self.assertTrue(account.check_password('Toto1234'))
 
     def test_sha512crypt_scheme(self):
         self._test_scheme('sha512crypt', '{SHA512-CRYPT}')

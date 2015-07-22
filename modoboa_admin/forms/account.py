@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 from django.http import QueryDict
 from django.utils.translation import ugettext as _, ugettext_lazy
 
+from passwords.fields import PasswordField
+
 from modoboa.core.models import User
 from modoboa.lib import events, parameters
 from modoboa.lib.email_utils import split_mailbox
@@ -36,10 +38,10 @@ class AccountFormGeneral(forms.ModelForm):
         choices=[('', ugettext_lazy("Choose"))],
         help_text=ugettext_lazy("What level of permission this user will have")
     )
-    password1 = forms.CharField(
+    password1 = PasswordField(
         label=ugettext_lazy("Password"), widget=forms.widgets.PasswordInput
     )
-    password2 = forms.CharField(
+    password2 = PasswordField(
         label=ugettext_lazy("Confirmation"),
         widget=forms.widgets.PasswordInput,
         help_text=ugettext_lazy(

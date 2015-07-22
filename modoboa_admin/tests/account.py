@@ -16,7 +16,7 @@ class AccountTestCase(ModoTestCase):
     def test_crud(self):
         values = dict(
             username="tester@test.com", first_name="Tester", last_name="Toto",
-            password1="toto", password2="toto", role="SimpleUsers",
+            password1="Toto1234", password2="Toto1234", role="SimpleUsers",
             quota_act=True,
             is_active=True, email="tester@test.com", stepid='step2'
         )
@@ -29,7 +29,7 @@ class AccountTestCase(ModoTestCase):
         self.assertEqual(mb.enabled, True)
         self.assertEqual(mb.quota_value.username, "tester@test.com")
         self.assertEqual(account.username, mb.full_address)
-        self.assertTrue(account.check_password("toto"))
+        self.assertTrue(account.check_password("Toto1234"))
         self.assertEqual(account.first_name, "Tester")
         self.assertEqual(account.last_name, "Toto")
         self.assertEqual(mb.domain.mailbox_count, 3)
@@ -77,7 +77,7 @@ class AccountTestCase(ModoTestCase):
             "username": "masteruser", "role": "SuperAdmins",
             "quota_act": False,
             "is_active": True, "master_user": True, "stepid": "step2",
-            "password1": "toto", "password2": "toto"
+            "password1": "Toto1234", "password2": "Toto1234"
         }
         self.ajax_post(
             reverse("modoboa_admin:account_add"), values
@@ -88,7 +88,7 @@ class AccountTestCase(ModoTestCase):
             "username": "testuser", "role": "DomainAdmins",
             "quota_act": False,
             "is_active": True, "master_user": True, "stepid": "step2",
-            "password1": "toto", "password2": "toto"
+            "password1": "Toto1234", "password2": "Toto1234"
         }
         self.ajax_post(
             reverse("modoboa_admin:account_add"), values, status=400
@@ -190,7 +190,7 @@ class PermissionsTestCase(ModoTestCase):
         """
         values = dict(
             username="superadmin2@test.com", first_name="Super",
-            last_name="Admin", password1="toto", password2="toto",
+            last_name="Admin", password1="Toto1234", password2="Toto1234",
             role="SuperAdmins", is_active=True,
             email="superadmin2@test.com", stepid='step2'
         )
@@ -220,7 +220,7 @@ class PermissionsTestCase(ModoTestCase):
         """Check domain administrator is not allowed to access this feature."""
         values = dict(
             username="user10@test.com", first_name="Test",
-            last_name="Test", password1="toto", password2="toto",
+            last_name="Test", password1="Toto1234", password2="Toto1234",
             role="SimpleUsers", is_active=True, master_user=True,
             email="user10@test.com", stepid='step2'
         )
