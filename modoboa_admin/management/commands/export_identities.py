@@ -28,5 +28,5 @@ class Command(BaseCommand, CloseConnectionMixin):
         for u in User.objects.all():
             u.to_csv(csvwriter)
 
-        for a in Alias.objects.all():
+        for a in Alias.objects.prefetch_related('mboxes', 'aliases'):
             a.to_csv(csvwriter)
