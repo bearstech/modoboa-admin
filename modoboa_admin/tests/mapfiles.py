@@ -13,6 +13,5 @@ class MapFilesTestCase(MapFilesTestCaseMixin, TestCase):
 
     MAP_FILES = [
         "sql-domains.cf", "sql-domain-aliases.cf", "sql-aliases.cf",
-        "sql-domain-aliases-mailboxes.cf", "sql-catchall-aliases.cf",
         "sql-maintain.cf"
     ]

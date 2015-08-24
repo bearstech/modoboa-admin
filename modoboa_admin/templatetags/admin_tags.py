@@ -184,9 +184,10 @@ def identity_actions(user, ident):
     else:
         actions = [
             {"name": "delalias",
-             "url": reverse("modoboa_admin:alias_delete") + "?selection=%s" % objid,
+             "url": "{}?selection={}".format(
+                 reverse("modoboa_admin:alias_delete"), objid),
              "img": "fa fa-trash",
-             "title": _("Delete %s?" % ident.full_address)},
+             "title": _("Delete %s?" % ident.address)},
         ]
     return render_actions(actions)
 

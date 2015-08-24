@@ -1,4 +1,5 @@
 from django.db import models
+
 from modoboa.lib import events
 from modoboa.lib.permissions import (
     grant_access_to_object, ungrant_access_to_object

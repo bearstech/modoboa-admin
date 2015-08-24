@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from modoboa.lib.tests import ModoTestCase
 
 from .. import factories
-from ..models import Domain, DomainAlias
+from ..models import Domain, DomainAlias, Alias
 
 
 class DomainAliasTestCase(ModoTestCase):
@@ -20,11 +20,17 @@ class DomainAliasTestCase(ModoTestCase):
         domal.target = dom
         domal.save()
         self.assertEqual(dom.domainalias_count, 1)
+        self.assertTrue(
+            Alias.objects.filter(
+                address="@{}".format(domal.name)).exists())
 
         domal.name = "domalias.org"
         domal.save()
 
         domal.delete()
+        self.assertFalse(
+            Alias.objects.filter(
+                address="@{}".format(domal.name)).exists())
 
     def test_form(self):
         dom = Domain.objects.get(name="test.com")

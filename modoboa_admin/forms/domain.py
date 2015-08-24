@@ -90,10 +90,12 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
         if self._errors:
             return cleaned_data
         name = cleaned_data["name"]
-        label = check_if_domain_exists(name, [(DomainAlias, _('domain alias'))])
+        label = check_if_domain_exists(
+            name, [(DomainAlias, _('domain alias'))])
         if label is not None:
             self.add_error(
-                "name", _("A %s with this name already exists") % unicode(label)
+                "name", _("A %s with this name already exists")
+                % unicode(label)
             )
         for k in cleaned_data.keys():
             if not k.startswith("aliases"):
@@ -111,7 +113,9 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
                 cleaned_data[k], [(Domain, _("domain"))])
             if label is not None:
                 self.add_error(
-                    k, _("A %s with this name already exists") % unicode(label))
+                    k, _("A %s with this name already exists")
+                    % unicode(label)
+                )
         return cleaned_data
 
     def update_mailbox_quotas(self, domain):
@@ -132,7 +136,7 @@ class DomainFormGeneral(forms.ModelForm, DynamicForm):
         for q in Quota.objects.filter(username__contains="@%s" % self.oldname):
             username = q.username.replace(
                 '@%s' % self.oldname, '@%s' % domain.name)
-            newq = Quota.objects.create(
+            Quota.objects.create(
                 username=username, bytes=q.bytes, messages=q.messages)
             q.delete()
 
@@ -269,8 +273,12 @@ class DomainFormOptions(forms.Form):
         if domain.type == "domain" and \
            self.cleaned_data["create_aliases"] == "yes":
             events.raiseEvent("CanCreate", user, "mailbox_aliases")
-            alias = Alias(address="postmaster", domain=domain, enabled=True)
-            alias.save(int_rcpts=[mb])
+            alias = Alias(
+                address="postmaster@{}".format(domain.name),
+                domain=domain, enabled=True
+            )
+            alias.save()
+            alias.set_recipients([mb.full_address])
             alias.post_create(user)
 
         domain.add_admin(da)

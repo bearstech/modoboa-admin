@@ -1,6 +1,6 @@
 {% extends "common/generic_modal_form.html" %}{% load form_tags %}
 {% block formbody %}
-{% render_field form.email %}
+{% render_field form.address %}
 {% render_fields_group form "recipients" %}
 {% if not form.instance.pk or form.instance.domain.enabled %}
 {% render_field form.enabled %}

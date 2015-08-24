@@ -66,15 +66,10 @@ def get_identities(user, searchquery=None, idtfilter=None, grpfilter=None):
             .values_list('object_id', flat=True)
         q = Q(pk__in=ids)
         if searchquery is not None:
-            if '@' in searchquery:
-                local_part, domname = split_mailbox(searchquery)
-                if local_part:
-                    q &= Q(address__icontains=local_part)
-                if domname:
-                    q &= Q(domain__name__icontains=domname)
-            else:
-                q &= Q(address__icontains=searchquery) | \
-                    Q(domain__name__icontains=searchquery)
+            q &= (
+                Q(address__icontains=searchquery) |
+                Q(domain__name__icontains=searchquery)
+            )
         aliases = Alias.objects.select_related().filter(q)
         if idtfilter is not None and idtfilter:
             aliases = [al for al in aliases if al.type == idtfilter]

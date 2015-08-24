@@ -50,164 +50,19 @@ class AliasesMap(object):
 
     filename = 'sql-aliases.cf'
     mysql = (
-        "(SELECT concat(mb.address, '@', dom.name) FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias_mboxes al_mb "
-        "INNER JOIN admin_alias al ON al_mb.alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1)) "
-        "UNION (SELECT concat(al.address, '@', dom.name) FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id WHERE al.id "
-        "IN (SELECT al_al.to_alias_id FROM admin_alias_aliases al_al "
-        "INNER JOIN admin_alias al ON al_al.from_alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1 AND al.extmboxes<>'')"
+        "SELECT alr.address FROM modoboa_admin_aliasrecipient AS alr"
+        "INNER JOIN admin_alias AS al ON alr.alias_id=al.id "
+        "WHERE al.enabled=1 AND al.address='%s'"
     )
     postgres = (
-        "(SELECT mb.address || '@' || dom.name FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias_mboxes al_mb "
-        "INNER JOIN admin_alias al ON al_mb.alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled AND al.address='%u' "
-        "AND al.enabled)) "
-        "UNION (SELECT al.address || '@' || dom.name FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id WHERE al.id "
-        "IN (SELECT al_al.to_alias_id FROM admin_alias_aliases al_al "
-        "INNER JOIN admin_alias al ON al_al.from_alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled AND al.address='%u' "
-        "AND al.enabled)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled AND al.address='%u' "
-        "AND al.enabled AND al.extmboxes<>'')"
+        "SELECT alr.address FROM modoboa_admin_aliasrecipient AS alr"
+        "INNER JOIN admin_alias AS al ON alr.alias_id=al.id "
+        "WHERE al.enabled AND al.address='%s'"
     )
     sqlite = (
-        "(SELECT (mb.address || '@' || dom.name) FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias_mboxes al_mb "
-        "INNER JOIN admin_alias al ON al_mb.alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1)) "
-        "UNION (SELECT (al.address || '@' || dom.name) FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id WHERE al.id "
-        "IN (SELECT al_al.to_alias_id FROM admin_alias_aliases al_al "
-        "INNER JOIN admin_alias al ON al_al.from_alias_id=al.id "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE dom.name='%d' AND dom.enabled=1 AND al.address='%u' "
-        "AND al.enabled=1 AND al.extmboxes<>'')"
-    )
-
-
-class DomainAliasesMailboxesMap(object):
-
-    """Map file to list all domain aliases mailboxes."""
-
-    filename = 'sql-domain-aliases-mailboxes.cf'
-    mysql = (
-        "(SELECT concat(mb.address, '@', dom.name) FROM admin_domainalias "
-        "domal "
-        "INNER JOIN admin_domain dom ON domal.target_id=dom.id "
-        "INNER JOIN admin_mailbox mb ON mb.domain_id=dom.id "
-        "WHERE domal.name='%d' AND dom.enabled=1 AND mb.address='%u') "
-        "UNION (SELECT concat(al.address, '@', dom.name) "
-        "FROM admin_domainalias domal INNER JOIN admin_domain dom "
-        "ON domal.target_id=dom.id INNER JOIN admin_alias al "
-        "ON al.domain_id=dom.id WHERE domal.name='%d' AND dom.enabled=1 "
-        "AND al.address='%u')"
-    )
-    postgres = (
-        "(SELECT mb.address || '@' || dom.name FROM admin_domainalias domal "
-        "INNER JOIN admin_domain dom ON domal.target_id=dom.id "
-        "INNER JOIN admin_mailbox mb ON mb.domain_id=dom.id "
-        "WHERE domal.name='%d' AND dom.enabled AND mb.address='%u') "
-        "UNION (SELECT al.address || '@' || dom.name "
-        "FROM admin_domainalias domal INNER JOIN admin_domain dom "
-        "ON domal.target_id=dom.id INNER JOIN admin_alias al "
-        "ON al.domain_id=dom.id WHERE domal.name='%d' AND dom.enabled "
-        "AND al.address='%u')"
-    )
-    sqlite = (
-        "(SELECT mb.address || '@' || dom.name FROM admin_domainalias domal "
-        "INNER JOIN admin_domain dom ON domal.target_id=dom.id "
-        "INNER JOIN admin_mailbox mb ON mb.domain_id=dom.id "
-        "WHERE domal.name='%d' AND dom.enabled=1 AND mb.address='%u') "
-        "UNION (SELECT al.address || '@' || dom.name "
-        "FROM admin_domainalias domal INNER JOIN admin_domain dom "
-        "ON domal.target_id=dom.id INNER JOIN admin_alias al "
-        "ON al.domain_id=dom.id WHERE domal.name='%d' AND dom.enabled=1 "
-        "AND al.address='%u')"
-    )
-
-
-class MailboxesSelfAliasesMap(object):
-
-    """A map to list regular mailboxes as aliases (catcall requirement)."""
-
-    filename = "sql-mailboxes-self-aliases.cf"
-    mysql = (
-        "SELECT email FROM core_user u INNER JOIN admin_mailbox mb "
-        "ON mb.user_id=u.id WHERE u.email='%s' AND u.is_active=1"
-    )
-    postgres = (
-        "SELECT email FROM core_user u INNER JOIN admin_mailbox mb "
-        "ON mb.user_id=u.id WHERE u.email='%s' AND u.is_active"
-    )
-    sqlite = (
-        "SELECT email FROM core_user u INNER JOIN admin_mailbox mb "
-        "ON mb.user_id=u.id WHERE u.email='%s' AND u.is_active=1"
-    )
-
-
-class CatchallAliasesMap(object):
-
-    """A map to list all catchall aliases."""
-
-    filename = 'sql-catchall-aliases.cf'
-    mysql = (
-        "(SELECT concat(mb.address, '@', dom.name) FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "INNER JOIN admin_alias_mboxes al_mb ON al.id=al_mb.alias_id "
-        "WHERE al.enabled=1 AND al.address='*' AND dom.name='%d' AND "
-        "dom.enabled=1)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE al.enabled='1' AND al.extmboxes<>'' AND al.address='*' "
-        "AND dom.name='%d' AND dom.enabled=1)"
-    )
-    postgres = (
-        "(SELECT mb.address || '@' || dom.name FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "INNER JOIN admin_alias_mboxes al_mb ON al.id=al_mb.alias_id "
-        "WHERE al.enabled AND al.address='*' AND dom.name='%d' AND "
-        "dom.enabled)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE al.enabled AND al.extmboxes<>'' AND al.address='*' "
-        "AND dom.name='%d' AND dom.enabled)"
-    )
-    sqlite = (
-        "(SELECT (mb.address || '@' || dom.name) FROM admin_mailbox mb "
-        "INNER JOIN admin_domain dom ON mb.domain_id=dom.id "
-        "WHERE mb.id IN (SELECT al_mb.mailbox_id FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "INNER JOIN admin_alias_mboxes al_mb ON al.id=al_mb.alias_id "
-        "WHERE al.enabled=1 AND al.address='*' AND dom.name='%d' AND "
-        "dom.enabled=1)) UNION (SELECT al.extmboxes FROM admin_alias al "
-        "INNER JOIN admin_domain dom ON al.domain_id=dom.id "
-        "WHERE al.enabled='1' AND al.extmboxes<>'' AND al.address='*' "
-        "AND dom.name='%d' AND dom.enabled=1)"
+        "SELECT alr.address FROM modoboa_admin_aliasrecipient AS alr"
+        "INNER JOIN admin_alias AS al ON alr.alias_id=al.id "
+        "WHERE al.enabled=1 AND al.address='%s'"
     )
 
 
@@ -372,8 +227,7 @@ class SenderLoginDomainCatchallAliasMap(object):
     )
 
 registry.add_files([
-    DomainsMap, DomainsAliasesMap, AliasesMap, DomainAliasesMailboxesMap,
-    MailboxesSelfAliasesMap, CatchallAliasesMap, MaintainMap,
+    DomainsMap, DomainsAliasesMap, AliasesMap, MaintainMap,
     SenderLoginAliasMap, SenderLoginMailboxMap, SenderLoginDomainAliasMap,
     SenderLoginDomainCatchallAliasMap
 ])

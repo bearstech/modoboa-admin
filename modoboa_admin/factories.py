@@ -46,6 +46,12 @@ class MailboxFactory(PermissionFactory):
     enabled = True
 
 
+class AliasRecipientFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = models.AliasRecipient
+
+
 class AliasFactory(PermissionFactory):
 
     class Meta:
@@ -70,16 +76,25 @@ def populate_database():
     )
     MailboxFactory.create(address='user', domain=dom, user=account)
 
-    fwd = AliasFactory.create(
-        address='forward', domain=dom, extmboxes='user@external.com'
-    )
     al = AliasFactory.create(
-        address='alias', domain=dom
+        address='forward@test.com', domain=dom
     )
-    al.mboxes.add(account.mailbox_set.all()[0])
-    AliasFactory.create(
-        address='postmaster', domain=dom, extmboxes='toto@titi.com,test@truc.fr'
+    AliasRecipientFactory.create(
+        address='user@external.com', alias=al)
+
+    al = AliasFactory.create(
+        address='alias@test.com', domain=dom
     )
+    mb = account.mailbox_set.first()
+    AliasRecipientFactory.create(
+        address=mb.full_address, alias=al, r_mailbox=mb)
+
+    al = AliasFactory.create(
+        address='postmaster@test.com', domain=dom
+    )
+    for address in ['toto@titi.com', 'test@truc.fr']:
+        AliasRecipientFactory.create(address=address, alias=al)
+
     dom.add_admin(admin)
 
     dom2 = DomainFactory.create(name='test2.com', quota=0)

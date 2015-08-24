@@ -9,7 +9,7 @@
 var Admin = function(options) {
     Listing.call(this, options);
 };
-    
+
 Admin.prototype = {
     defaults: {
         deflocation: "list/",
@@ -545,7 +545,7 @@ Identities.prototype = {
     },
 
     aliasform_cb: function() {
-        $("#id_email").autocompleter({
+        $("#id_address").autocompleter({
             from_character: "@",
             choices: $.proxy(this.get_domain_list, this)
         });
