@@ -189,3 +189,14 @@ class AliasTestCase(ModoTestCase):
         self.assertEqual(fwd.aliasrecipient_set.count(), 2)
         self.assertEqual(
             fwd.aliasrecipient_set.filter(r_alias__isnull=True).count(), 2)
+
+    def test_wildcard_alias(self):
+        """Test creation of a wildcard alias."""
+        values = {
+            "address": "@test.com",
+            "recipients": "user@test.com",
+            "enabled": True
+        }
+        self.ajax_post(
+            reverse("modoboa_admin:dlist_add"), values
+        )

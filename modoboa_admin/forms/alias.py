@@ -12,23 +12,25 @@ from modoboa.lib.form_utils import (
 )
 
 from ..models import Domain, Alias
+from .base import SimpleEmailField
 
 
 class AliasForm(forms.ModelForm, DynamicForm):
 
     """A form to create/modify an alias."""
 
-    address = forms.EmailField(
+    address = SimpleEmailField(
         label=ugettext_lazy("Email address"),
         help_text=ugettext_lazy(
-            "The alias address."
+            "The alias address. To create a catchall alias, just enter the "
+            "domain name (@domain.tld)."
         ),
         widget=forms.TextInput(attrs={"class": "form-control"})
     )
     recipients = forms.EmailField(
         label=ugettext_lazy("Recipients"), required=False,
         help_text=ugettext_lazy(
-            "Mailbox(es) this alias will point to. Indicate only one address "
+            "Addresses this alias will point to. Indicate only one address "
             "per input, press ENTER to add a new input."
         ),
         widget=forms.TextInput(attrs={"class": "form-control"})
