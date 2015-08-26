@@ -55,17 +55,17 @@ class Alias(AdminObject):
 
     @property
     def name_or_rcpt(self):
-        rcpts_count = self.get_recipients_count()
+        rcpts_count = self.recipients_count
         if not rcpts_count:
             return "---"
-        rcpts = self.get_recipients()
+        rcpts = self.recipients
         if rcpts_count > 1:
             return "%s, ..." % rcpts[0]
         return rcpts[0]
 
     @property
     def type(self):
-        cpt = self.get_recipients_count()
+        cpt = self.recipients_count
         if cpt > 1:
             return "dlist"
         qset = self.aliasrecipient_set.filter(
@@ -143,31 +143,14 @@ class Alias(AdminObject):
         self.aliasrecipient_set.exclude(
             address__in=address_list).delete()
 
-    def get_recipients(self, with_external=True):
-        """Return the recipients list.
+    @property
+    def recipients(self):
+        """Return the recipient list."""
+        return self.aliasrecipient_set.values_list("address", flat=True)
 
-        Internal and external addresses are mixed into a single list.
-
-        :param bool with_external: include external addresses or not
-        :rtype: list
-        :return: a list of addresses
-        """
-        result = []
-        for rcpt in self.aliasrecipient_set.select_related().all():
-            conditions = (
-                rcpt.r_mailbox,
-                rcpt.r_alias,
-                with_external
-            )
-            if any(conditions):
-                result.append(rcpt.address)
-        return result
-
-    def get_recipients_count(self):
-        """Return the number of recipients of this alias.
-
-        :rtype: int
-        """
+    @property
+    def recipients_count(self):
+        """Return the number of recipients of this alias."""
         return self.aliasrecipient_set.count()
 
     def from_csv(self, user, row, expected_elements=5):
@@ -195,7 +178,7 @@ class Alias(AdminObject):
 
     def to_csv(self, csvwriter):
         row = [self.type, self.address.encode("utf-8"), self.enabled]
-        row += self.get_recipients()
+        row += self.recipients
         csvwriter.writerow(row)
 
 reversion.register(Alias)

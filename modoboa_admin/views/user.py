@@ -39,7 +39,7 @@ def forward(request, tplname="modoboa_admin/forward.html"):
 
     form = ForwardForm()
     if al is not None:
-        form.fields["dest"].initial = al.get_recipients()
+        form.fields["dest"].initial = al.recipients
         if al.aliasrecipient_set.filter(mailbox=mb.id).exists():
             form.fields["keepcopies"].initial = True
     return render_to_json_response({

@@ -206,7 +206,7 @@ class AccountFormMail(forms.Form, DynamicForm):
             cpt = 1
             qset = self.mb.aliasrecipient_set.select_related("alias")
             for ralias in qset:
-                if len(ralias.alias.get_recipients()) >= 2:
+                if ralias.alias.recipients_count >= 2:
                     continue
                 name = "aliases_%d" % cpt
                 self._create_field(forms.EmailField, name, ralias.address)
@@ -303,7 +303,7 @@ class AccountFormMail(forms.Form, DynamicForm):
             if ralias.alias.address not in aliases:
                 alias = ralias.alias
                 ralias.delete()
-                if alias.get_recipients_count() >= 2:
+                if alias.recipients_count >= 2:
                     continue
                 alias.delete()
             else:
