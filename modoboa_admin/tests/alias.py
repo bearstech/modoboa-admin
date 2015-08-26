@@ -29,7 +29,8 @@ class AliasTestCase(ModoTestCase):
             values
         )
         self.assertEqual(
-            AliasRecipient.objects.filter(r_mailbox=user.mailbox_set.first())
+            AliasRecipient.objects.filter
+            (alias__internal=False, r_mailbox=user.mailbox_set.first())
             .count(), 2
         )
         del values["aliases_1"]
@@ -38,7 +39,8 @@ class AliasTestCase(ModoTestCase):
             values
         )
         self.assertEqual(
-            AliasRecipient.objects.filter(r_mailbox=user.mailbox_set.first())
+            AliasRecipient.objects.filter(
+                alias__internal=False, r_mailbox=user.mailbox_set.first())
             .count(), 1
         )
 
@@ -70,9 +72,11 @@ class AliasTestCase(ModoTestCase):
         )
         mb = user.mailbox_set.first()
         self.assertEqual(
-            AliasRecipient.objects.filter(r_mailbox=mb).count(), 1)
+            AliasRecipient.objects
+            .filter(alias__internal=False, r_mailbox=mb).count(), 1)
         self.assertEqual(
-            AliasRecipient.objects.get(r_mailbox=mb).alias.address,
+            AliasRecipient.objects.get(
+                alias__internal=False, r_mailbox=mb).alias.address,
             "toto@test.com"
         )
 

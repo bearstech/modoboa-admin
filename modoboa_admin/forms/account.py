@@ -297,7 +297,9 @@ class AccountFormMail(forms.Form, DynamicForm):
                 continue
             aliases.append(value.lower())
 
-        for ralias in self.mb.aliasrecipient_set.select_related("alias"):
+        qset = self.mb.aliasrecipient_set.select_related("alias").filter(
+            alias__internal=False)
+        for ralias in qset:
             if ralias.alias.address not in aliases:
                 alias = ralias.alias
                 ralias.delete()
