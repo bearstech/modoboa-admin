@@ -92,17 +92,32 @@ dlist; dlist@test.com; True; user1@test.com; user@extdomain.com
         u = User.objects.get(username="user@test.com")
         self.assertTrue(da.can_access(u))
 
-        al = Alias.objects.get(address="alias1", domain__name="test.com")
-        self.assertIn(u1.mailbox_set.all()[0], al.mboxes.all())
+        al = Alias.objects.get(address="alias1@test.com")
+        self.assertTrue(
+            al.aliasrecipient_set
+            .filter(r_mailbox=u1.mailbox_set.first()).exists()
+        )
         self.assertTrue(admin.is_owner(al))
 
-        fwd = Alias.objects.get(address="fwd1", domain__name="test.com")
-        self.assertIn("user@extdomain.com", fwd.extmboxes)
+        fwd = Alias.objects.get(address="fwd1@test.com")
+        self.assertTrue(
+            fwd.aliasrecipient_set
+            .filter(
+                address="user@extdomain.com", r_mailbox__isnull=True,
+                r_alias__isnull=True)
+            .exists()
+        )
         self.assertTrue(admin.is_owner(fwd))
 
-        dlist = Alias.objects.get(address="dlist", domain__name="test.com")
-        self.assertIn(u1.mailbox_set.all()[0], dlist.mboxes.all())
-        self.assertIn("user@extdomain.com", dlist.extmboxes)
+        dlist = Alias.objects.get(address="dlist@test.com")
+        self.assertTrue(
+            dlist.aliasrecipient_set
+            .filter(r_mailbox=u1.mailbox_set.first()).exists()
+        )
+        self.assertTrue(
+            dlist.aliasrecipient_set.filter(address="user@extdomain.com")
+            .exists()
+        )
         self.assertTrue(admin.is_owner(dlist))
 
     def test_import_for_nonlocal_domain(self):
@@ -218,7 +233,5 @@ alias;user.alias@test.com;True;user@test.com;;;;;;;;;;;;;;;;
             {"sourcefile": f, "crypt_password": True,
              "continue_if_exists": True}
         )
-        alias = Alias.objects.get(
-            domain__name="test.com", address="user.alias"
-        )
+        alias = Alias.objects.get(address="user.alias@test.com")
         self.assertEqual(alias.type, "alias")

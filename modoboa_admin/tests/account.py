@@ -4,7 +4,7 @@ from modoboa.core.models import User
 from modoboa.lib.tests import ModoTestCase
 
 from .. import factories
-from ..models import Domain, Mailbox
+from .. import models
 
 
 class AccountTestCase(ModoTestCase):
@@ -23,26 +23,38 @@ class AccountTestCase(ModoTestCase):
         self.ajax_post(reverse("modoboa_admin:account_add"), values)
 
         account = User.objects.get(username="tester@test.com")
-        mb = account.mailbox_set.all()[0]
+        mb = account.mailbox_set.first()
         self.assertEqual(mb.full_address, "tester@test.com")
         self.assertEqual(mb.quota, 10)
-        self.assertEqual(mb.enabled, True)
+        self.assertTrue(mb.enabled)
         self.assertEqual(mb.quota_value.username, "tester@test.com")
         self.assertEqual(account.username, mb.full_address)
         self.assertTrue(account.check_password("Toto1234"))
         self.assertEqual(account.first_name, "Tester")
         self.assertEqual(account.last_name, "Toto")
         self.assertEqual(mb.domain.mailbox_count, 3)
+        # Check if self alias has been created
+        self.assertTrue(
+            models.AliasRecipient.objects.select_related("alias").filter(
+                alias__address=mb.full_address, address=mb.full_address,
+                alias__internal=True).exists()
+        )
 
         values["username"] = "pouet@test.com"
         self.ajax_post(
             reverse("modoboa_admin:account_change", args=[account.id]), values
         )
-        mb = Mailbox.objects.get(pk=mb.id)
+        mb = models.Mailbox.objects.get(pk=mb.id)
         self.assertEqual(mb.full_address, "pouet@test.com")
         self.assertEqual(mb.quota_value.username, "pouet@test.com")
         self.ajax_post(
             reverse("modoboa_admin:account_delete", args=[account.id]), {}
+        )
+        # Check if self alias has been deleted
+        self.assertFalse(
+            models.AliasRecipient.objects.select_related("alias").filter(
+                alias__address=mb.full_address, address=mb.full_address,
+                alias__internal=True).exists()
         )
 
     def _set_quota(self, email, value, expected_status=200):
@@ -158,7 +170,8 @@ class PermissionsTestCase(ModoTestCase):
             values
         )
         self.assertEqual(admin.group, "DomainAdmins")
-        self.assertTrue(admin.can_access(Domain.objects.get(name="test.com")))
+        self.assertTrue(admin.can_access(
+            models.Domain.objects.get(name="test.com")))
 
         values["role"] = "SuperAdmins"
         self.ajax_post(
@@ -209,7 +222,7 @@ class PermissionsTestCase(ModoTestCase):
         """Check if a domain admin can use a local mailbox he can't
         access as a recipient in a distribution list"""
         values = dict(
-            email="all@test.com",
+            address="all@test.com",
             recipients="user@test.com",
             recipients_1="user@test2.com",
             enabled=True

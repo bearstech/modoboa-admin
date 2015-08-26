@@ -48,17 +48,13 @@ class DomainAlias(AdminObject):
             raise BadRequest(_("Invalid line"))
         self.name = row[1].strip()
         for model in [DomainAlias, Domain]:
-            try:
-                model.objects.get(name=self.name)
-            except model.DoesNotExist:
-                pass
-            else:
+            if model.objects.filter(name=self.name).exists():
                 raise Conflict
         domname = row[2].strip()
         try:
             self.target = Domain.objects.get(name=domname)
         except Domain.DoesNotExist:
-            raise BadRequest(_("Unknown domain %s" % domname))
+            raise BadRequest(_("Unknown domain %s") % domname)
         self.enabled = row[3].strip() in ["True", "1", "yes", "y"]
         self.save(creator=user)
 

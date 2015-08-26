@@ -20,7 +20,7 @@ class ForwardTestCase(ModoTestCase):
             reverse('user_forward'),
             {'dest': 'user@extdomain.com', 'keepcopies': True}
         )
-        forward = Alias.objects.get(address='user', domain__name='test.com')
+        forward = Alias.objects.get(address='user@test.com', internal=False)
         sadmin = User.objects.get(username='admin')
         self.assertTrue(sadmin.can_access(forward))
         domadmin = User.objects.get(username='admin@test.com')

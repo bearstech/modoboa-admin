@@ -1,13 +1,14 @@
 """Models related to aliases management."""
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.translation import ugettext as _, ugettext_lazy
 
 import reversion
 
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import (
-    PermDeniedException, BadRequest, Conflict
+    PermDeniedException, BadRequest, Conflict, NotFound
 )
 
 from .base import AdminObject
@@ -16,6 +17,7 @@ from .mailbox import Mailbox
 from .. import signals
 
 
+@python_2_unicode_compatible
 class Alias(AdminObject):
 
     """Mailbox alias."""
@@ -23,64 +25,52 @@ class Alias(AdminObject):
     address = models.CharField(
         ugettext_lazy('address'), max_length=254,
         help_text=ugettext_lazy(
-            "The alias address (without the domain part). For a 'catch-all' "
-            "address, just enter an * character."
+            "The alias address."
         )
     )
-    domain = models.ForeignKey(Domain)
-    mboxes = models.ManyToManyField(
-        Mailbox, verbose_name=ugettext_lazy('mailboxes'),
-        help_text=ugettext_lazy("The mailboxes this alias points to")
-    )
-    aliases = models.ManyToManyField(
-        'Alias',
-        help_text=ugettext_lazy("The aliases this alias points to")
-    )
-    extmboxes = models.TextField(blank=True)
+    domain = models.ForeignKey(Domain, null=True)
     enabled = models.BooleanField(
         ugettext_lazy('enabled'),
         help_text=ugettext_lazy("Check to activate this alias"),
         default=True
     )
+    internal = models.BooleanField(default=False)
     _objectname = 'MailboxAlias'
 
     class Meta:
         permissions = (
             ("view_aliases", "View aliases"),
         )
-        unique_together = (("address", "domain"),)
-        ordering = ["domain__name", "address"]
+        ordering = ["address"]
+        unique_together = (("address", "internal"), )
         app_label = "modoboa_admin"
         db_table = "admin_alias"
 
-    def __unicode__(self):
-        return self.full_address
-
-    @property
-    def full_address(self):
-        return "%s@%s" % (self.address, self.domain.name)
+    def __str__(self):
+        return smart_text(self.address)
 
     @property
     def identity(self):
-        return self.full_address
+        return self.address
 
     @property
     def name_or_rcpt(self):
-        rcpts_count = self.get_recipients_count()
+        rcpts_count = self.recipients_count
         if not rcpts_count:
             return "---"
-        rcpts = self.get_recipients()
+        rcpts = self.recipients
         if rcpts_count > 1:
             return "%s, ..." % rcpts[0]
         return rcpts[0]
 
     @property
     def type(self):
-        cpt = self.get_recipients_count()
-
+        cpt = self.recipients_count
         if cpt > 1:
             return "dlist"
-        if self.extmboxes != "":
+        qset = self.aliasrecipient_set.filter(
+            r_mailbox__isnull=True, r_alias__isnull=True)
+        if qset.exists():
             return "forward"
         return "alias"
 
@@ -101,58 +91,67 @@ class Alias(AdminObject):
             for admin in self.domain.admins:
                 grant_access_to_object(admin, self)
 
-    def save(self, *args, **kwargs):
-        """Custom save method."""
-        if 'ext_rcpts' in kwargs:
-            self.extmboxes = ",".join(kwargs['ext_rcpts']) \
-                if kwargs['ext_rcpts'] else ""
-            del kwargs['ext_rcpts']
-        if 'int_rcpts' in kwargs:
-            int_rcpts = kwargs['int_rcpts']
-            del kwargs['int_rcpts']
-        else:
-            int_rcpts = []
-        super(Alias, self).save(*args, **kwargs)
-        curaliases = self.aliases.all()
-        curmboxes = self.mboxes.all()
-        for rcpt in int_rcpts:
-            if isinstance(rcpt, Alias):
-                if rcpt not in curaliases:
-                    self.aliases.add(rcpt)
+    def set_recipients(self, address_list):
+        """Set recipients for this alias. Special recipients:
+
+        * local mailbox + extension: r_mailbox will be set to local mailbox
+        * alias address == recipient address: valid only to keep local copies
+          (when a forward is defined) and to create exceptions when a catchall
+          is defined on the associated domain
+
+        """
+        to_create = []
+        for address in set(address_list):
+            if not address:
                 continue
-            if rcpt not in curmboxes:
-                self.mboxes.add(rcpt)
-        for rcpt in curaliases:
-            if rcpt not in int_rcpts:
-                self.aliases.remove(rcpt)
-        for rcpt in curmboxes:
-            if rcpt not in int_rcpts:
-                self.mboxes.remove(rcpt)
+            if self.aliasrecipient_set.filter(address=address).exists():
+                continue
+            local_part, domname, extension = (
+                split_mailbox(address, return_extension=True))
+            if domname is None:
+                raise BadRequest(
+                    u"%s %s" % (_("Invalid address"), address)
+                )
+            domain = Domain.objects.filter(name=domname).first()
+            kwargs = {"address": address, "alias": self}
+            if (
+                (domain is not None) and
+                (
+                    any(
+                        r[1] for r in signals.use_external_recipients.send(
+                            self, recipients=address)
+                    ) is False
+                )
+            ):
+                rcpt = Mailbox.objects.filter(
+                    domain=domain, address=local_part).first()
+                if rcpt is None:
+                    rcpt = Alias.objects.filter(address=address).first()
+                    if rcpt is None:
+                        raise NotFound(
+                            _("Local recipient {}@{} not found")
+                            .format(local_part, domname)
+                        )
+                    if rcpt.address == self.address:
+                        raise Conflict
+                    kwargs["r_alias"] = rcpt
+                else:
+                    kwargs["r_mailbox"] = rcpt
+            to_create.append(AliasRecipient(**kwargs))
+        AliasRecipient.objects.bulk_create(to_create)
+        # Remove old recipients
+        self.aliasrecipient_set.exclude(
+            address__in=address_list).delete()
 
-    def get_recipients(self, with_external=True):
-        """Return the recipients list.
+    @property
+    def recipients(self):
+        """Return the recipient list."""
+        return self.aliasrecipient_set.values_list("address", flat=True)
 
-        Internal and external addresses are mixed into a single list.
-
-        :param bool with_external: include external addresses or not
-        :rtype: list
-        :return: a list of addresses
-        """
-        result = [al.full_address for al in self.aliases.all()]
-        result += [mb.full_address for mb in self.mboxes.all()]
-        if with_external and self.extmboxes != "":
-            result += self.extmboxes.split(',')
-        return result
-
-    def get_recipients_count(self):
-        """Return the number of recipients of this alias.
-
-        :rtype: int
-        """
-        total = 0
-        if self.extmboxes != "":
-            total += len(self.extmboxes.split(','))
-        return total + self.aliases.count() + self.mboxes.count()
+    @property
+    def recipients_count(self):
+        """Return the number of recipients of this alias."""
+        return self.aliasrecipient_set.count()
 
     def from_csv(self, user, row, expected_elements=5):
         """Create a new alias from a CSV file entry
@@ -160,71 +159,54 @@ class Alias(AdminObject):
         """
         if len(row) < expected_elements:
             raise BadRequest(_("Invalid line: %s" % row))
-        localpart, domname = split_mailbox(row[1].strip())
+        address = row[1].strip()
+        localpart, domname = split_mailbox(address)
         try:
             domain = Domain.objects.get(name=domname)
         except Domain.DoesNotExist:
             raise BadRequest(_("Domain '%s' does not exist" % domname))
         if not user.can_access(domain):
             raise PermDeniedException
-        try:
-            Alias.objects.get(address=localpart, domain__name=domain)
-        except Alias.DoesNotExist:
-            pass
-        else:
+        if Alias.objects.filter(address=address).exists():
             raise Conflict
-        self.address = localpart
+        self.address = address
         self.domain = domain
         self.enabled = (row[2].strip() in ["True", "1", "yes", "y"])
-        int_rcpts = []
-        ext_rcpts = []
-        for rcpt in row[3:]:
-            rcpt = rcpt.strip()
-            if not rcpt:
-                continue
-            localpart, domname, extension = (
-                split_mailbox(rcpt, return_extension=True))
-
-            if (
-                any(
-                    r[1] for r in signals.use_external_recipients.send(
-                        None, recipients=rcpt)
-                )
-            ):
-                ext_rcpts += [rcpt]
-                continue
-
-            try:
-                Domain.objects.get(name=domname)
-            except Domain.DoesNotExist:
-                ext_rcpts += [rcpt]
-                continue
-            try:
-                target = Alias.objects.get(
-                    domain__name=domname, address=localpart
-                )
-                if target.full_address == self.full_address:
-                    target = None
-            except Alias.DoesNotExist:
-                target = None
-            if target is None:
-                try:
-                    target = Mailbox.objects.get(address=localpart,
-                                                 domain__name=domname)
-                except Mailbox.DoesNotExist:
-                    raise BadRequest(_("Local recipient %s not found" % rcpt))
-
-            if extension:
-                ext_rcpts += [rcpt]
-            else:
-                int_rcpts += [target]
-
-        self.save(int_rcpts=int_rcpts, ext_rcpts=ext_rcpts)
+        self.save()
+        self.set_recipients([raddress.strip() for raddress in row[3:]])
         self.post_create(user)
 
     def to_csv(self, csvwriter):
-        row = [self.type, self.full_address.encode("utf-8"), self.enabled]
-        row += self.get_recipients()
+        row = [self.type, self.address.encode("utf-8"), self.enabled]
+        row += self.recipients
         csvwriter.writerow(row)
 
 reversion.register(Alias)
+
+
+@python_2_unicode_compatible
+class AliasRecipient(models.Model):
+
+    """An alias recipient."""
+
+    address = models.EmailField()
+    alias = models.ForeignKey(Alias)
+
+    # if recipient is a local mailbox
+    r_mailbox = models.ForeignKey(Mailbox, blank=True, null=True)
+    # if recipient is a local alias
+    r_alias = models.ForeignKey(
+        Alias, related_name="alias_recipient_aliases", blank=True, null=True)
+
+    class Meta:
+        app_label = "modoboa_admin"
+        unique_together = [
+            ("alias", "r_mailbox"),
+            ("alias", "r_alias")
+        ]
+
+    def __str__(self):
+        """Return alias and recipient."""
+        return smart_text(
+            "{} -> {}".format(self.alias.address, self.alias)
+        )

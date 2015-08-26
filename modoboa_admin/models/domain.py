@@ -158,17 +158,13 @@ class Domain(AdminObject):
         if len(row) < 4:
             raise BadRequest(_("Invalid line"))
         self.name = row[1].strip()
-        try:
-            Domain.objects.get(name=self.name)
-        except Domain.DoesNotExist:
-            pass
-        else:
+        if Domain.objects.filter(name=self.name).exists():
             raise Conflict
         try:
             self.quota = int(row[2].strip())
         except ValueError:
             raise BadRequest(
-                _("Invalid quota value for domain '%s'" % self.name))
+                _("Invalid quota value for domain '%s'") % self.name)
         self.enabled = (row[3].strip() in ["True", "1", "yes", "y"])
         self.save(creator=user)
 

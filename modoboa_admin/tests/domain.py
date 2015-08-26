@@ -47,8 +47,11 @@ class DomainTestCase(ModoTestCase):
         dom = Domain.objects.get(name="pouet.com")
         da = User.objects.get(username="toto@pouet.com")
         self.assertIn(da, dom.admins)
-        al = Alias.objects.get(address="postmaster", domain__name="pouet.com")
-        self.assertIn(da.mailbox_set.all()[0], al.mboxes.all())
+        al = Alias.objects.get(address="postmaster@pouet.com")
+        self.assertTrue(
+            al.aliasrecipient_set.filter(r_mailbox=da.mailbox_set.first())
+            .exists()
+        )
         self.assertTrue(da.can_access(al))
 
     def test_create_with_template_and_empty_quota(self):
@@ -65,8 +68,11 @@ class DomainTestCase(ModoTestCase):
         dom = Domain.objects.get(name="pouet.com")
         da = User.objects.get(username="toto@pouet.com")
         self.assertIn(da, dom.admins)
-        al = Alias.objects.get(address="postmaster", domain__name="pouet.com")
-        self.assertIn(da.mailbox_set.all()[0], al.mboxes.all())
+        al = Alias.objects.get(address="postmaster@pouet.com")
+        self.assertTrue(
+            al.aliasrecipient_set.filter(r_mailbox=da.mailbox_set.first())
+            .exists()
+        )
         self.assertTrue(da.can_access(al))
 
     def test_create_using_default_quota(self):
@@ -83,7 +89,7 @@ class DomainTestCase(ModoTestCase):
         dom = Domain.objects.get(name="pouet.com")
         self.assertEqual(dom.quota, 50)
         da = User.objects.get(username="toto@pouet.com")
-        self.assertEqual(da.mailbox_set.all()[0].quota, 50)
+        self.assertEqual(da.mailbox_set.first().quota, 50)
 
     def test_modify(self):
         """Test the modification of a domain
@@ -91,7 +97,8 @@ class DomainTestCase(ModoTestCase):
         Rename 'test.com' domain to 'pouet.com'
         """
         values = {
-            "name": "pouet.com", "quota": 100, "type": "domain", "enabled": True
+            "name": "pouet.com", "quota": 100, "type": "domain",
+            "enabled": True
         }
         dom = Domain.objects.get(name="test.com")
         self.ajax_post(

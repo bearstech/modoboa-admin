@@ -23,7 +23,6 @@ def _validate_alias(request, form, successmsg, callback=None):
     Common function shared between creation and modification actions.
     """
     if form.is_valid():
-        form.set_recipients()
         try:
             alias = form.save()
         except IntegrityError:
@@ -63,7 +62,8 @@ def _new_alias(request, title, action, successmsg,
 @reversion.create_revision()
 def newdlist(request):
     return _new_alias(
-        request, _("New distribution list"), reverse("modoboa_admin:dlist_add"),
+        request, _("New distribution list"),
+        reverse("modoboa_admin:dlist_add"),
         _("Distribution list created")
     )
 
@@ -96,9 +96,10 @@ def editalias(request, alid, tplname="modoboa_admin/aliasform.html"):
     if not request.user.can_access(alias):
         raise PermDeniedException
     if request.method == "POST":
-        if len(alias.get_recipients()) >= 2:
+        altype = alias.type
+        if altype == "dlist":
             successmsg = _("Distribution list modified")
-        elif alias.extmboxes != "":
+        elif altype == "forward":
             successmsg = _("Forward modified")
         else:
             successmsg = _("Alias modified")
@@ -108,7 +109,7 @@ def editalias(request, alid, tplname="modoboa_admin/aliasform.html"):
     ctx = {
         'action': reverse("modoboa_admin:alias_change", args=[alias.id]),
         'formid': 'aliasform',
-        'title': alias.full_address,
+        'title': alias.address,
         'action_label': _('Update'),
         'action_classes': 'submit',
         'form': AliasForm(request.user, instance=alias)

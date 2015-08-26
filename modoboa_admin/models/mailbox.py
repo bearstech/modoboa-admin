@@ -7,8 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
 from django.db.models.manager import Manager
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 from django.utils.translation import ugettext as _, ugettext_lazy
 
 import reversion
@@ -16,7 +14,7 @@ import reversion
 from .base import AdminObject
 from .domain import Domain
 from modoboa.core.models import User
-from modoboa.lib import parameters, events
+from modoboa.lib import parameters
 from modoboa.lib.exceptions import BadRequest, InternalError
 from modoboa.lib.sysutils import exec_cmd
 
@@ -256,7 +254,11 @@ class Mailbox(AdminObject):
     def post_create(self, creator):
         from modoboa.lib.permissions import grant_access_to_object
         super(Mailbox, self).post_create(creator)
-        if creator.is_superuser and not self.user.has_perm("modoboa_admin.add_domain"):
+        conditions = (
+            creator.is_superuser,
+            not self.user.has_perm("modoboa_admin.add_domain")
+        )
+        if all(conditions):
             # A super user is creating a new mailbox. Give
             # access to that mailbox (and the associated
             # account) to the appropriate domain admins,
@@ -286,38 +288,12 @@ class Mailbox(AdminObject):
                              filesystem or not
 
         """
-        try:
-            q = Quota.objects.get(username=self.full_address)
-        except Quota.DoesNotExist:
-            pass
-        else:
-            q.delete()
+        Quota.objects.filter(username=self.full_address).delete()
         if not keepdir:
             self.delete_dir()
         super(Mailbox, self).delete()
 
 reversion.register(Mailbox)
-
-
-@receiver(pre_delete, sender=Mailbox)
-def mailbox_deleted_handler(sender, **kwargs):
-    """``Mailbox`` pre_delete signal receiver
-
-    In order to properly handle deletions (ie. we don't want to leave
-    orphan records into the db), we define this custom receiver.
-
-    It manually removes the mailbox from the aliases it is linked to
-    and then remove all empty aliases.
-    """
-    from modoboa.lib.permissions import ungrant_access_to_object
-
-    mb = kwargs['instance']
-    events.raiseEvent("MailboxDeleted", mb)
-    ungrant_access_to_object(mb)
-    for alias in mb.alias_set.all():
-        alias.mboxes.remove(mb)
-        if alias.mboxes.count() == 0:
-            alias.delete()
 
 
 class MailboxOperation(models.Model):

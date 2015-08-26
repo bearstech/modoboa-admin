@@ -204,11 +204,12 @@ class AccountFormMail(forms.Form, DynamicForm):
         if self.mb is not None:
             self.fields["email"].required = True
             cpt = 1
-            for alias in self.mb.alias_set.all():
-                if len(alias.get_recipients()) >= 2:
+            qset = self.mb.aliasrecipient_set.select_related("alias")
+            for ralias in qset:
+                if ralias.alias.recipients_count >= 2:
                     continue
                 name = "aliases_%d" % cpt
-                self._create_field(forms.EmailField, name, alias.full_address)
+                self._create_field(forms.EmailField, name, ralias.address)
                 cpt += 1
             self.fields["email"].initial = self.mb.full_address
             self.fields["quota_act"].initial = self.mb.use_domain_quota
@@ -296,29 +297,31 @@ class AccountFormMail(forms.Form, DynamicForm):
                 continue
             aliases.append(value.lower())
 
-        for alias in self.mb.alias_set.all():
-            if alias.full_address not in aliases:
-                if len(alias.get_recipients()) >= 2:
+        qset = self.mb.aliasrecipient_set.select_related("alias").filter(
+            alias__internal=False)
+        for ralias in qset:
+            if ralias.alias.address not in aliases:
+                alias = ralias.alias
+                ralias.delete()
+                if alias.recipients_count >= 2:
                     continue
                 alias.delete()
             else:
-                aliases.remove(alias.full_address)
+                aliases.remove(ralias.alias.address)
         if not aliases:
             return
         events.raiseEvent(
             "CanCreate", user, "mailbox_aliases", len(aliases)
         )
         for alias in aliases:
-            local_part, domname = split_mailbox(alias)
-            try:
-                self.mb.alias_set.get(address=local_part, domain__name=domname)
-            except Alias.DoesNotExist:
-                pass
-            else:
+            if self.mb.aliasrecipient_set.select_related("alias").filter(
+                    alias__address=alias).exists():
                 continue
-            al = Alias(address=local_part, enabled=account.is_active)
+            local_part, domname = split_mailbox(alias)
+            al = Alias(address=alias, enabled=account.is_active)
             al.domain = Domain.objects.get(name=domname)
-            al.save(int_rcpts=[self.mb])
+            al.save()
+            al.set_recipients([self.mb.full_address])
             al.post_create(user)
 
     def save(self, user, account):

@@ -24,22 +24,23 @@ class ForwardForm(forms.Form):
             "Forward messages and store copies into your local mailbox")
     )
 
-    def parse_dest(self):
-        self.dests = []
+    def get_recipients(self):
+        recipients = []
         rawdata = self.cleaned_data["dest"].strip()
-        if rawdata == "":
+        if not rawdata:
             return
-        for d in rawdata.split(","):
-            local_part, domname = split_mailbox(d)
-            if not local_part or not domname or not len(domname):
-                raise BadRequest("Invalid mailbox syntax for %s" % d)
+        for rcpt in rawdata.split(","):
+            local_part, domname = split_mailbox(rcpt)
+            if not local_part or not domname:
+                raise BadRequest("Invalid mailbox syntax for %s" % rcpt)
             try:
                 Domain.objects.get(name=domname)
             except Domain.DoesNotExist:
-                self.dests += [d]
+                recipients += [rcpt]
             else:
                 raise PermDeniedException(
                     _("You can't define a forward to a local destination. "
                       "Please ask your administrator to create an alias "
                       "instead.")
                 )
+        return recipients
