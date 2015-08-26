@@ -1,27 +1,26 @@
 """Custom form tools."""
 
-from django.core.exceptions import ValidationError
-from django.forms.fields import CharField
-from django.utils.translation import ugettext as _, ugettext_lazy
+import re
+
+from django.core.validators import EmailValidator
+from django.forms.fields import EmailField as OriginalEmailField
 
 
-def validate_email_address(value):
-    """Check if value contains exactly one @."""
-    if value.count("@") != 1:
-        raise ValidationError(_("Enter a valid email address"), "invalid")
+class CustomEmailValidator(EmailValidator):
+
+    """Allow empty user_part."""
+
+    user_regex = re.compile(
+        r"(^$"
+        r"|^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*\Z"  # dot-atom
+        r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-\011\013\014\016-\177])*"\Z)',  # quoted-string
+        re.IGNORECASE)
+
+validate_email = CustomEmailValidator()
 
 
-class SimpleEmailField(CharField):
+class EmailField(OriginalEmailField):
 
     """A field that accepts email addresses."""
 
-    default_error_messages = {
-        "invalid": ugettext_lazy("Enter a valid email address")
-    }
-
-    default_validators = [validate_email_address]
-
-    def clean(self, value):
-        """Clean address."""
-        value = self.to_python(value).strip()
-        return super(SimpleEmailField, self).clean(value)
+    default_validators = [validate_email]
