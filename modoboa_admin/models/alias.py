@@ -126,7 +126,9 @@ class Alias(AdminObject):
                 rcpt = Mailbox.objects.filter(
                     domain=domain, address=local_part).first()
                 if rcpt is None:
-                    rcpt = Alias.objects.filter(address=address).first()
+                    rcpt = Alias.objects.filter(
+                        address='%s@%s' % (local_part, domname)
+                    ).first()
                     if rcpt is None:
                         raise NotFound(
                             _("Local recipient {}@{} not found")
